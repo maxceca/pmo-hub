@@ -742,7 +742,12 @@ async function startLoad() {
           } else if (col.type === 'color' || col.type === 'status') {
             if (/estado|status|semáforo|semaforo/.test(t)) {
               const sl = statusLabel(overallPct, _projEnd);
-              pcv[col.id] = { index: sl === 'Done' ? 1 : sl === 'Stuck' ? 2 : 0 };
+              pcv[col.id] = { label: sl };
+            }
+          } else if (col.type === 'dropdown') {
+            if (/estado|status|semáforo|semaforo/.test(t)) {
+              const sl = statusLabel(overallPct, _projEnd);
+              pcv[col.id] = { labels: [sl] };
             }
           } else if (col.type === 'date') {
             if (/inicio|start|comienzo|begin/.test(t) && _allStarts.length)
@@ -878,7 +883,7 @@ async function startUpdate(apiKey) {
       if (colByTitle['Predecesoras'])    cv[colByTitle['Predecesoras']]    = (t['Dependencias'] || t['Predecessors'] || '').toString();
       if (optStatus && colByTitle['Estado']) {
         const sl = statusLabel(pctReal, endStr);
-        cv[colByTitle['Estado']] = { index: sl === 'Done' ? 1 : sl === 'Stuck' ? 2 : 0 };
+        cv[colByTitle['Estado']] = { label: sl };
       }
 
       if (!itemId) {
@@ -974,7 +979,9 @@ async function startUpdate(apiKey) {
             if (col.type === 'numbers' && /avance|progreso|%|complete|pct|porcentaje/.test(t))
               pcv2[col.id] = String(uOverallPct);
             else if ((col.type === 'color' || col.type === 'status') && /estado|status|semáforo|semaforo/.test(t))
-              pcv2[col.id] = { index: uSl === 'Done' ? 1 : uSl === 'Stuck' ? 2 : 0 };
+              pcv2[col.id] = { label: uSl };
+            else if (col.type === 'dropdown' && /estado|status|semáforo|semaforo/.test(t))
+              pcv2[col.id] = { labels: [uSl] };
             else if (col.type === 'date') {
               if (/inicio|start|comienzo|begin/.test(t) && _uAllStarts.length)
                 pcv2[col.id] = { date: _uAllStarts.sort()[0] };
