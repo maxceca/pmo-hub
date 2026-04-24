@@ -742,12 +742,14 @@ async function startLoad() {
           } else if (col.type === 'color' || col.type === 'status') {
             if (/estado|status|semáforo|semaforo/.test(t)) {
               const sl = statusLabel(overallPct, _projEnd);
-              pcv[col.id] = { label: sl };
+              const _pl = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
+              pcv[col.id] = { label: _pl[sl] || sl };
             }
           } else if (col.type === 'dropdown') {
             if (/estado|status|semáforo|semaforo/.test(t)) {
               const sl = statusLabel(overallPct, _projEnd);
-              pcv[col.id] = { labels: [sl] };
+              const _pl = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
+              pcv[col.id] = { labels: [_pl[sl] || sl] };
             }
           } else if (col.type === 'date') {
             if (/inicio|start|comienzo|begin/.test(t) && _allStarts.length)
@@ -978,10 +980,13 @@ async function startUpdate(apiKey) {
             const t = col.title.toLowerCase();
             if (col.type === 'numbers' && /avance|progreso|%|complete|pct|porcentaje/.test(t))
               pcv2[col.id] = String(uOverallPct);
-            else if ((col.type === 'color' || col.type === 'status') && /estado|status|semáforo|semaforo/.test(t))
-              pcv2[col.id] = { label: uSl };
-            else if (col.type === 'dropdown' && /estado|status|semáforo|semaforo/.test(t))
-              pcv2[col.id] = { labels: [uSl] };
+            else if ((col.type === 'color' || col.type === 'status') && /estado|status|semáforo|semaforo/.test(t)) {
+              const _pl2 = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
+              pcv2[col.id] = { label: _pl2[uSl] || uSl };
+            } else if (col.type === 'dropdown' && /estado|status|semáforo|semaforo/.test(t)) {
+              const _pl2 = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
+              pcv2[col.id] = { labels: [_pl2[uSl] || uSl] };
+            }
             else if (col.type === 'date') {
               if (/inicio|start|comienzo|begin/.test(t) && _uAllStarts.length)
                 pcv2[col.id] = { date: _uAllStarts.sort()[0] };
