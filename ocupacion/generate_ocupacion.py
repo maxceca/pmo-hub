@@ -18,10 +18,25 @@ ICS_DIR   = Path(os.environ.get("ICS_DIR", REPO_ROOT / "ocupacion" / "calendars"
 OUTPUT    = REPO_ROOT / "ocupacion" / "index.html"
 
 # ── Constantes ───────────────────────────────────────────────────────────────
-CDMX_OFFSET = timedelta(hours=-6)   # UTC-6
-WORK_START  = 8 * 60                # 08:00 → minutos desde medianoche
-WORK_END    = 17 * 60               # 17:00
-WORK_MIN    = WORK_END - WORK_START  # 540 min/día
+CDMX_OFFSET      = timedelta(hours=-6)   # UTC-6
+WORK_MIN_PER_DAY = 8 * 60               # 40h/semana = 8h/día = 480 min
+
+# Días no laborables México 2026 + Jueves y Viernes Santo
+HOLIDAYS: set[date] = {
+    date(2026, 1,  1),   # Año Nuevo
+    date(2026, 2,  2),   # Día de la Constitución (primer lunes de febrero)
+    date(2026, 3, 16),   # Natalicio de Benito Juárez (tercer lunes de marzo)
+    date(2026, 4,  2),   # Jueves Santo
+    date(2026, 4,  3),   # Viernes Santo
+    date(2026, 5,  1),   # Día del Trabajo
+    date(2026, 9, 16),   # Día de la Independencia
+    date(2026, 11,16),   # Revolución Mexicana (tercer lunes de noviembre)
+    date(2026, 12,25),   # Navidad
+}
+
+# Palabras clave a excluir (insensible a mayúsculas y acentos)
+EXCLUDE_KEYWORDS = ["personal", "comida", "medico", "médico",
+                    "cita medica", "cita médica"]
 
 # colores para Chart.js (uno por PM)
 CHART_COLORS = [
@@ -118,31 +133,37 @@ def parse_ics(path: Path) -> list[dict]:
         if m and m.group(1).strip() == "TRUE":
             ev["allday"] = True
 
+        m = re.match(r"SUMMARY(?:;[^:]+)?:(.+)", line)
+        if m:
+            ev["summary"] = m.group(1).strip()
+
     return events
 
 
 # ── Cálculo de ocupación ─────────────────────────────────────────────────────
 
-def minutes_of_day(dt: datetime) -> int:
-    return dt.hour * 60 + dt.minute
-
-
 def is_workday(d: date) -> bool:
     return d.weekday() < 5  # lun=0 … vie=4
 
 
-def clip_to_workday(start: datetime, end: datetime) -> int:
-    """
-    Retorna minutos [clipeados a 08:00-17:00] del intervalo (start, end)
-    dentro de UN solo día hábil (mismo date).
-    """
-    if start.date() != end.date():
-        return 0
-    if not is_workday(start.date()):
-        return 0
-    s = max(minutes_of_day(start), WORK_START)
-    e = min(minutes_of_day(end), WORK_END)
-    return max(0, e - s)
+def is_holiday(d: date) -> bool:
+    return d in HOLIDAYS
+
+
+def is_countable_day(d: date) -> bool:
+    """Días en que se cuentan horas reales: lunes-viernes (incluyendo festivos si hubo trabajo)."""
+    return is_workday(d)
+
+
+def is_billable_day(d: date) -> bool:
+    """Día laborable planeado: lunes-viernes y NO festivo (para el denominador)."""
+    return is_workday(d) and not is_holiday(d)
+
+
+def is_excluded(summary: str) -> bool:
+    """True si el título del evento contiene una palabra clave a excluir."""
+    s = summary.lower()
+    return any(k in s for k in EXCLUDE_KEYWORDS)
 
 
 def split_event_by_day(start: datetime, end: datetime):
@@ -173,11 +194,16 @@ def merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:
 
 def compute_daily_busy(events: list[dict]) -> dict:
     """
-    Retorna dict: date → {busy_min, tent_min}
-    donde busy_min y tent_min son minutos netos (solapados fusionados) para ese día.
-    Ambos cuentan para % total.
+    Retorna dict: date → {total_min, busy_min, tent_min}
+    - Cuenta TODAS las horas del evento sin restricción de horario.
+    - Solo días laborables (lun-vie, no festivos).
+    - Excluye eventos con palabras clave (personal, comida, médico...).
+    - Fusiona intervalos solapados antes de sumar.
     """
-    # día → lista de intervalos (start_min, end_min) separados por tipo
+    # usa minutos desde epoch-del-día para fusionar solapados
+    def to_abs(dt: datetime) -> int:
+        return dt.hour * 60 + dt.minute
+
     day_busy: dict[date, list[tuple[int, int]]] = collections.defaultdict(list)
     day_tent: dict[date, list[tuple[int, int]]] = collections.defaultdict(list)
 
@@ -185,13 +211,19 @@ def compute_daily_busy(events: list[dict]) -> dict:
         btype = ev.get("busy_type", "BUSY")
         if btype == "FREE":
             continue
+        summary = ev.get("summary", "")
+        if is_excluded(summary):
+            continue
         segments = split_event_by_day(ev["start"], ev["end"])
         for seg_start, seg_end in segments:
             d = seg_start.date()
-            if not is_workday(d):
+            if not is_countable_day(d):   # excluir fines de semana; festivos SÍ cuentan en numerador
                 continue
-            s = max(minutes_of_day(seg_start), WORK_START)
-            e = min(minutes_of_day(seg_end), WORK_END)
+            # minutos del segmento en ese día (sin clip de horario)
+            s = to_abs(seg_start)
+            e = to_abs(seg_end) if seg_start.date() == seg_end.date() else 24 * 60
+            if e <= s:
+                e = 24 * 60  # evento cruza medianoche: contar hasta fin de día
             if e <= s:
                 continue
             if btype == "TENTATIVE":
@@ -202,7 +234,6 @@ def compute_daily_busy(events: list[dict]) -> dict:
     all_days = set(day_busy.keys()) | set(day_tent.keys())
     result = {}
     for d in all_days:
-        # fusionar busy + tentative juntos para % total
         all_intervals = day_busy[d] + day_tent[d]
         total_min = sum(e - s for s, e in merge_intervals(all_intervals))
         busy_only = sum(e - s for s, e in merge_intervals(day_busy[d]))
@@ -223,15 +254,18 @@ def week_of_month(d: date) -> int:
 
 
 def group_by_month(daily: dict) -> dict:
-    """month_str → {total_min, busy_min, tent_min, work_days, daily}"""
+    """month_str → {total_min, busy_min, tent_min, work_days, avail_min, daily}"""
     months: dict[str, dict] = {}
     for d, vals in daily.items():
         if d.year < 2026:
             continue
         key = d.strftime("%Y-%m")
         if key not in months:
+            yr, mo = int(key[:4]), int(key[5:])
             months[key] = {"total_min": 0, "busy_min": 0, "tent_min": 0,
-                           "work_days": 0, "daily": {}}
+                           "work_days": 0,
+                           "avail_min": available_min_in_month(yr, mo),
+                           "daily": {}}
         months[key]["total_min"] += vals["total_min"]
         months[key]["busy_min"]  += vals["busy_min"]
         months[key]["tent_min"]  += vals["tent_min"]
@@ -240,19 +274,24 @@ def group_by_month(daily: dict) -> dict:
     return months
 
 
-def workdays_in_month(year: int, month: int) -> int:
-    """Cuenta días hábiles (lun-vie) en el mes."""
+def billable_days_in_month(year: int, month: int) -> int:
+    """Días laborables del mes: lun-vie excluyendo festivos."""
     from calendar import monthrange
     _, days = monthrange(year, month)
     return sum(1 for d in range(1, days + 1)
-               if date(year, month, d).weekday() < 5)
+               if is_billable_day(date(year, month, d)))
+
+
+def available_min_in_month(year: int, month: int) -> int:
+    """Minutos disponibles = días laborables × 480 (40h/semana = 8h/día)."""
+    return billable_days_in_month(year, month) * WORK_MIN_PER_DAY
 
 
 def pct(minutes: int, year: int, month: int) -> float:
-    wd = workdays_in_month(year, month)
-    if wd == 0:
+    avail = available_min_in_month(year, month)
+    if avail == 0:
         return 0.0
-    return round(minutes / (wd * WORK_MIN) * 100, 1)
+    return round(minutes / avail * 100, 1)
 
 
 # ── Generación HTML ───────────────────────────────────────────────────────────
@@ -320,7 +359,7 @@ def build_weekly_breakdown(monthly_daily: dict, year: int, month: int) -> str:
         for d in wdays:
             dvals = monthly_daily.get(d.isoformat(), {})
             dm = dvals.get("total_min", 0)
-            dp = round(dm / WORK_MIN * 100)
+            dp = round(dm / WORK_MIN_PER_DAY * 100)
             dp = min(dp, 100)
             cls = "dc-green" if dp < 70 else ("dc-amber" if dp <= 90 else "dc-red")
             tip = f"{DAY_ABBR[d.weekday()]} {d.day}: {dp}%"
