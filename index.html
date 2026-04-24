@@ -30,80 +30,80 @@ nav.hub-nav{
   color:var(--green);border:1px solid rgba(151,215,0,.4);
   padding:3px 12px;border-radius:20px;letter-spacing:.05em;}
 
-/* ── HERO ── */
-.hero{
-  background:linear-gradient(135deg,#1a1a2e 0%,#23234a 60%,#1a2e1a 100%);
-  padding:72px 32px 64px;text-align:center;position:relative;overflow:hidden;
+/* ── PAGE HEADER ── */
+.page-header{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:0 32px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
 }
-.hero::after{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 120%,rgba(151,215,0,.18) 0%,transparent 65%);
-}
-.hero-inner{position:relative;z-index:1;max-width:680px;margin:0 auto;}
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:11px;font-weight:600;color:var(--green);
-  letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px;
-}
-.hero-eyebrow::before,.hero-eyebrow::after{
-  content:'';display:block;width:28px;height:1px;background:var(--green);opacity:.6;
-}
-.hero h1{font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:#fff;line-height:1.1;margin-bottom:16px;}
-.hero h1 span{color:var(--green);}
-.hero-sub{font-size:15px;color:rgba(255,255,255,.65);font-weight:300;line-height:1.7;max-width:520px;margin:0 auto;}
+.page-header-title{font-size:14px;font-weight:600;color:var(--text);}
+.page-header-date{font-size:12px;color:var(--muted);}
 
 /* ── TOOLS GRID ── */
-.tools-section{max-width:1100px;margin:0 auto;padding:64px 32px;}
-.tools-section h2{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.08em;
-  text-transform:uppercase;margin-bottom:32px;}
+.tools-section{max-width:980px;margin:0 auto;padding:48px 32px 80px;}
+.tools-label{
+  display:flex;align-items:center;gap:10px;
+  font-size:11px;font-weight:700;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px;
+}
+.tools-label::after{content:'';flex:1;height:1px;background:var(--border);}
 .tools-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;
 }
 .tool-card{
   background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);
-  padding:28px 24px 24px;display:flex;flex-direction:column;
-  transition:transform .2s,box-shadow .2s,border-color .2s;
+  padding:0;display:flex;flex-direction:column;
+  transition:transform .2s,box-shadow .25s,border-color .2s;
   position:relative;overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.05);
+}
+.tool-card-top{
+  padding:24px 24px 20px;flex:1;display:flex;flex-direction:column;
 }
 .tool-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:var(--green);transform:scaleX(0);transform-origin:left;
-  transition:transform .25s;
+  background:var(--green);
 }
 .tool-card:hover{
-  transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.1);
-  border-color:rgba(151,215,0,.4);
+  transform:translateY(-3px);
+  box-shadow:0 8px 32px rgba(0,0,0,.1);
+  border-color:rgba(151,215,0,.5);
 }
-.tool-card:hover::before{transform:scaleX(1);}
 .tool-icon{
-  width:48px;height:48px;border-radius:12px;
-  background:rgba(151,215,0,.1);border:1px solid rgba(151,215,0,.25);
+  width:44px;height:44px;border-radius:10px;
+  background:rgba(151,215,0,.12);border:1px solid rgba(151,215,0,.3);
   display:flex;align-items:center;justify-content:center;
-  font-size:22px;margin-bottom:18px;
+  margin-bottom:16px;flex-shrink:0;
 }
-.tool-name{font-size:16px;font-weight:700;margin-bottom:8px;}
-.tool-desc{font-size:13px;color:var(--muted);line-height:1.6;flex:1;margin-bottom:20px;}
+.tool-icon svg{width:22px;height:22px;}
+.tool-name{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--text);}
+.tool-desc{font-size:12.5px;color:var(--muted);line-height:1.65;flex:1;}
+.tool-footer{
+  border-top:1px solid var(--border);padding:12px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.tool-tag{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
 .tool-btn{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--dark);color:#fff;font-size:12px;font-weight:600;
-  text-decoration:none;padding:9px 18px;border-radius:8px;
-  transition:background .15s;align-self:flex-start;
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--green);color:var(--dark);font-size:11px;font-weight:700;
+  text-decoration:none;padding:6px 14px;border-radius:6px;
+  transition:background .15s,transform .1s;letter-spacing:.02em;
 }
-.tool-btn:hover{background:var(--green);color:var(--dark);}
-.tool-btn::after{content:'→';font-size:11px;}
+.tool-btn:hover{background:var(--green-dk);transform:translateX(2px);}
+.tool-btn svg{width:11px;height:11px;}
 
 /* ── FOOTER ── */
 footer{
-  border-top:1px solid var(--border);padding:28px 32px;text-align:center;
-  font-size:12px;color:var(--muted);
+  border-top:1px solid var(--border);padding:24px 32px;text-align:center;
+  font-size:12px;color:var(--muted);background:#fff;
 }
 footer strong{color:var(--text);font-weight:600;}
 footer a{color:var(--green);text-decoration:none;font-weight:600;}
 
 @media(max-width:600px){
-  .hub-badge{display:none;}
-  .hero{padding:48px 20px 40px;}
-  .tools-section{padding:40px 20px;}
+  .hub-badge,.page-header-date{display:none;}
+  .tools-section{padding:32px 16px 60px;}
+  .page-header{padding:0 16px;}
 }
 </style>
 </head>
@@ -121,36 +121,80 @@ footer a{color:var(--green);text-decoration:none;font-weight:600;}
 </nav>
 
 
+<div class="page-header">
+  <span class="page-header-title">Herramientas PMO</span>
+  <span class="page-header-date" id="hdr-date"></span>
+</div>
+
 <section class="tools-section">
-  <h2>Herramientas disponibles</h2>
+  <div class="tools-label">Disponibles</div>
   <div class="tools-grid">
 
     <div class="tool-card">
-      <div class="tool-icon">📊</div>
-      <div class="tool-name">Portafolio de Proyectos</div>
-      <div class="tool-desc">Dashboard ejecutivo con el portafolio de Productos y Servicios. Análisis financiero, estatus y alertas por año.</div>
-      <a href="portafolio/" class="tool-btn">Abrir </a>
+      <div class="tool-card-top">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+        </div>
+        <div class="tool-name">Portafolio de Proyectos</div>
+        <div class="tool-desc">Dashboard ejecutivo con el portafolio de Productos y Servicios. Análisis financiero, estatus y alertas por año.</div>
+      </div>
+      <div class="tool-footer">
+        <span class="tool-tag">Dashboard</span>
+        <a href="portafolio/" class="tool-btn">Abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
     </div>
 
     <div class="tool-card">
-      <div class="tool-icon">📅</div>
-      <div class="tool-name">Ocupación del Equipo</div>
-      <div class="tool-desc">Dashboard de ocupación mensual del equipo PM basado en calendarios de Office 365. Se actualiza automáticamente.</div>
-      <a href="ocupacion/" class="tool-btn">Abrir </a>
+      <div class="tool-card-top">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+            <circle cx="8" cy="15" r="1" fill="#97D700"/><circle cx="12" cy="15" r="1" fill="#97D700"/>
+          </svg>
+        </div>
+        <div class="tool-name">Ocupación del Equipo</div>
+        <div class="tool-desc">Dashboard de ocupación mensual del equipo PM basado en calendarios de Office 365. Se actualiza automáticamente.</div>
+      </div>
+      <div class="tool-footer">
+        <span class="tool-tag">Dashboard</span>
+        <a href="ocupacion/" class="tool-btn">Abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
     </div>
 
     <div class="tool-card">
-      <div class="tool-icon">📈</div>
-      <div class="tool-name">KPIs Project Managers</div>
-      <div class="tool-desc">Indicadores clave de desempeño del equipo de PMs. Resumen, gráficas y detalle por proyecto.</div>
-      <a href="kpis/" class="tool-btn">Abrir </a>
+      <div class="tool-card-top">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <div class="tool-name">KPIs Project Managers</div>
+        <div class="tool-desc">Indicadores clave de desempeño del equipo de PMs. Resumen, gráficas y detalle por proyecto.</div>
+      </div>
+      <div class="tool-footer">
+        <span class="tool-tag">Indicadores</span>
+        <a href="kpis/" class="tool-btn">Abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
     </div>
 
     <div class="tool-card">
-      <div class="tool-icon">🔧</div>
-      <div class="tool-name">Monday Loader</div>
-      <div class="tool-desc">Herramienta para migrar planes de trabajo a Monday.com. Carga masiva desde Excel en 4 pasos.</div>
-      <a href="tools/" class="tool-btn">Abrir </a>
+      <div class="tool-card-top">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <div class="tool-name">Monday Loader</div>
+        <div class="tool-desc">Herramienta para migrar planes de trabajo a Monday.com. Carga masiva desde Excel en 4 pasos.</div>
+      </div>
+      <div class="tool-footer">
+        <span class="tool-tag">Herramienta</span>
+        <a href="tools/" class="tool-btn">Abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
     </div>
 
   </div>
@@ -160,5 +204,10 @@ footer a{color:var(--green);text-decoration:none;font-weight:600;}
   <strong>CEN Systems</strong> · PMO Hub &nbsp;·&nbsp; <a href="mailto:alceca3000@gmail.com">Alan Cerón Cardonne</a> &nbsp;·&nbsp; PMP® · Six Sigma MBB
 </footer>
 
+<script>
+  const d = new Date();
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('hdr-date').textContent = d.toLocaleDateString('es-MX', opts);
+</script>
 </body>
 </html>
