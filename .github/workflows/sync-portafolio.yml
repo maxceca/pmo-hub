@@ -5,6 +5,9 @@ on:
   repository_dispatch: # disparo programatico (opcional)
     types: [portafolio-updated]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   sync:
     runs-on: ubuntu-latest
