@@ -1,0 +1,40 @@
+name: Actualizar Ocupación
+
+on:
+  push:
+    paths:
+      - 'ocupacion/calendars/*.ics'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout pmo-hub
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generar ocupacion/index.html
+        run: python ocupacion/generate_ocupacion.py
+
+      - name: Publicar HTML actualizado
+        run: |
+          git config user.name  "PMO Dashboard Bot"
+          git config user.email "bot@censys-pmo-hub.local"
+          git add ocupacion/index.html
+          git diff --cached --quiet && echo "Sin cambios." || \
+            (git commit -m "dashboard: ocupacion actualizada $(date '+%Y-%m-%d %H:%M UTC')" \
+             && git push origin main)
