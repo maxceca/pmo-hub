@@ -7,37 +7,49 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --green:#97D700; --green-dk:#7ab000;
-  --dark:#1a1a2e;  --surface:#f8f9fa;
-  --white:#ffffff; --text:#1a1a2e;
-  --muted:#6b7280; --border:#e5e7eb;
-  --r:12px; --r-lg:18px;
+  --navy:#1E2761; --navy-mid:#2D3A8C;
+  --teal:#97D700; --teal-dk:#7ab000;
+  --ice:#CADCFC;  --white:#ffffff;
+  --off:#F4F6FB;  --text:#1E293B;
+  --muted:#64748B; --border:#E2E8F0;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Open Sans',sans-serif;background:var(--surface);color:var(--text);min-height:100vh;}
+body{font-family:'Open Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh;}
 
 /* ── NAV ── */
 nav.hub-nav{
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 32px;height:64px;background:var(--dark);
-  border-bottom:4px solid var(--green);position:sticky;top:0;z-index:100;
+  padding:0 32px;height:64px;background:var(--navy);
+  border-bottom:4px solid var(--teal);position:sticky;top:0;z-index:100;
 }
 .hub-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
 .hub-logo img{height:36px;width:auto;}
 .hub-logo-text .title{font-size:16px;font-weight:700;color:#fff;letter-spacing:-.2px;}
-.hub-logo-text .sub{font-size:10px;color:var(--green);font-weight:600;letter-spacing:.08em;text-transform:uppercase;}
+.hub-logo-text .sub{font-size:10px;color:var(--teal);font-weight:600;letter-spacing:.08em;text-transform:uppercase;}
 .hub-badge{font-size:10px;font-weight:700;background:rgba(151,215,0,.15);
-  color:var(--green);border:1px solid rgba(151,215,0,.4);
+  color:var(--teal);border:1px solid rgba(151,215,0,.4);
   padding:3px 12px;border-radius:20px;letter-spacing:.05em;}
 
-/* ── PAGE HEADER ── */
-.page-header{
-  background:#fff;border-bottom:1px solid var(--border);
-  padding:0 32px;height:56px;
-  display:flex;align-items:center;justify-content:space-between;
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,#1E2761 0%,#2D3A8C 60%,#1a3a6b 100%);
+  padding:3.5rem 2rem 3rem;position:relative;overflow:hidden;
 }
-.page-header-title{font-size:14px;font-weight:600;color:var(--text);}
-.page-header-date{font-size:12px;color:var(--muted);}
+.hero::before{
+  content:'';position:absolute;right:-5%;top:-20%;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(151,215,0,.15) 0%,transparent 70%);
+}
+.hero-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1;}
+.hero-eyebrow{
+  font-size:11px;font-weight:600;color:#97D700;letter-spacing:.12em;
+  text-transform:uppercase;margin-bottom:1rem;
+  display:flex;align-items:center;gap:8px;
+}
+.hero-eyebrow::before{content:'';display:block;width:28px;height:2px;background:#97D700;}
+.hero h1{font-size:clamp(1.8rem,4vw,3rem);font-weight:700;color:#fff;line-height:1.1;margin-bottom:.75rem;}
+.hero h1 span{color:#97D700;}
+.hero-sub{font-size:15px;color:#CADCFC;opacity:.85;font-weight:300;line-height:1.7;}
 
 /* ── TOOLS GRID ── */
 .tools-section{max-width:980px;margin:0 auto;padding:48px 32px 80px;}
@@ -51,46 +63,45 @@ nav.hub-nav{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;
 }
 .tool-card{
-  background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);
-  padding:0;display:flex;flex-direction:column;
-  transition:transform .2s,box-shadow .25s,border-color .2s;
+  background:var(--white);border:1px solid var(--border);border-radius:16px;
+  padding:24px;display:flex;flex-direction:column;gap:16px;
+  transition:transform .2s,box-shadow .2s;
   position:relative;overflow:hidden;
-  box-shadow:0 1px 4px rgba(0,0,0,.05);
-}
-.tool-card-top{
-  padding:24px 24px 20px;flex:1;display:flex;flex-direction:column;
+  box-shadow:0 2px 12px rgba(30,39,97,.06);
 }
 .tool-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:var(--green);
+  background:var(--teal);
 }
 .tool-card:hover{
   transform:translateY(-3px);
-  box-shadow:0 8px 32px rgba(0,0,0,.1);
-  border-color:rgba(151,215,0,.5);
+  box-shadow:0 8px 28px rgba(30,39,97,.12);
 }
 .tool-icon{
   width:44px;height:44px;border-radius:10px;
   background:rgba(151,215,0,.12);border:1px solid rgba(151,215,0,.3);
   display:flex;align-items:center;justify-content:center;
-  margin-bottom:16px;flex-shrink:0;
+  flex-shrink:0;
 }
 .tool-icon svg{width:22px;height:22px;}
-.tool-name{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--text);}
+.tool-name{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--text);}
 .tool-desc{font-size:12.5px;color:var(--muted);line-height:1.65;flex:1;}
 .tool-footer{
-  border-top:1px solid var(--border);padding:12px 24px;
   display:flex;align-items:center;justify-content:space-between;
+  margin-top:auto;
 }
 .tool-tag{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
 .tool-btn{
   display:inline-flex;align-items:center;gap:5px;
-  background:var(--green);color:var(--dark);font-size:11px;font-weight:700;
+  background:#97D700;color:#1E2761;font-size:11px;font-weight:700;
   text-decoration:none;padding:6px 14px;border-radius:6px;
   transition:background .15s,transform .1s;letter-spacing:.02em;
 }
-.tool-btn:hover{background:var(--green-dk);transform:translateX(2px);}
+.tool-btn:hover{background:var(--teal-dk);transform:translateX(2px);}
 .tool-btn svg{width:11px;height:11px;}
+
+/* ── ANIMATION ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 
 /* ── FOOTER ── */
 footer{
@@ -98,12 +109,12 @@ footer{
   font-size:12px;color:var(--muted);background:#fff;
 }
 footer strong{color:var(--text);font-weight:600;}
-footer a{color:var(--green);text-decoration:none;font-weight:600;}
+footer a{color:var(--teal);text-decoration:none;font-weight:600;}
 
 @media(max-width:600px){
-  .hub-badge,.page-header-date{display:none;}
+  .hub-badge{display:none;}
   .tools-section{padding:32px 16px 60px;}
-  .page-header{padding:0 16px;}
+  .hero{padding:2.5rem 1.25rem 2rem;}
 }
 </style>
 </head>
@@ -121,9 +132,12 @@ footer a{color:var(--green);text-decoration:none;font-weight:600;}
 </nav>
 
 
-<div class="page-header">
-  <span class="page-header-title">Herramientas PMO</span>
-  <span class="page-header-date" id="hdr-date"></span>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">CEN Systems · Centro de Gestión de Proyectos</div>
+    <h1>PMO <span>Hub</span></h1>
+    <p class="hero-sub">Portafolio, ocupación del equipo, KPIs y herramientas de gestión centralizados.</p>
+  </div>
 </div>
 
 <section class="tools-section">
@@ -131,16 +145,14 @@ footer a{color:var(--green);text-decoration:none;font-weight:600;}
   <div class="tools-grid">
 
     <div class="tool-card">
-      <div class="tool-card-top">
-        <div class="tool-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-            <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-          </svg>
-        </div>
-        <div class="tool-name">Portafolio de Proyectos</div>
-        <div class="tool-desc">Dashboard ejecutivo con el portafolio de Productos y Servicios. Análisis financiero, estatus y alertas por año.</div>
+      <div class="tool-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
       </div>
+      <div class="tool-name">Portafolio de Proyectos</div>
+      <div class="tool-desc">Dashboard ejecutivo con el portafolio de Productos y Servicios. Análisis financiero, estatus y alertas por año.</div>
       <div class="tool-footer">
         <span class="tool-tag">Dashboard</span>
         <a href="portafolio/" class="tool-btn">Abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -148,16 +160,14 @@ footer a{color:var(--green);text-decoration:none;font-weight:600;}
     </div>
 
     <div class="tool-card">
-      <div class="tool-card-top">
-        <div class="tool-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
-            <circle cx="8" cy="15" r="1" fill="#97D700"/><circle cx="12" cy="15" r="1" fill="#97D700"/>
-          </svg>
-        </div>
-        <div class="tool-name">Ocupación del Equipo</div>
-        <div class="tool-desc">Dashboard de ocupación mensual del equipo PM basado en calendarios de Office 365. Se actualiza automáticamente.</div>
+      <div class="tool-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+          <circle cx="8" cy="15" r="1" fill="#97D700"/><circle cx="12" cy="15" r="1" fill="#97D700"/>
+        </svg>
       </div>
+      <div class="tool-name">Ocupación del Equipo</div>
+      <div class="tool-desc">Dashboard de ocupación mensual del equipo PM basado en calendarios de Office 365. Se actualiza automáticamente.</div>
       <div class="tool-footer">
         <span class="tool-tag">Dashboard</span>
         <a href="ocupacion/" class="tool-btn">Abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -165,15 +175,13 @@ footer a{color:var(--green);text-decoration:none;font-weight:600;}
     </div>
 
     <div class="tool-card">
-      <div class="tool-card-top">
-        <div class="tool-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-          </svg>
-        </div>
-        <div class="tool-name">KPIs Project Managers</div>
-        <div class="tool-desc">Indicadores clave de desempeño del equipo de PMs. Resumen, gráficas y detalle por proyecto.</div>
+      <div class="tool-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
       </div>
+      <div class="tool-name">KPIs Project Managers</div>
+      <div class="tool-desc">Indicadores clave de desempeño del equipo de PMs. Resumen, gráficas y detalle por proyecto.</div>
       <div class="tool-footer">
         <span class="tool-tag">Indicadores</span>
         <a href="kpis/" class="tool-btn">Abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -181,16 +189,14 @@ footer a{color:var(--green);text-decoration:none;font-weight:600;}
     </div>
 
     <div class="tool-card">
-      <div class="tool-card-top">
-        <div class="tool-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-        </div>
-        <div class="tool-name">Monday Loader</div>
-        <div class="tool-desc">Herramienta para migrar planes de trabajo a Monday.com. Carga masiva desde Excel en 4 pasos.</div>
+      <div class="tool-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#97D700" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
       </div>
+      <div class="tool-name">Monday Loader</div>
+      <div class="tool-desc">Herramienta para migrar planes de trabajo a Monday.com. Carga masiva desde Excel en 4 pasos.</div>
       <div class="tool-footer">
         <span class="tool-tag">Herramienta</span>
         <a href="tools/" class="tool-btn">Abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -204,10 +210,5 @@ footer a{color:var(--green);text-decoration:none;font-weight:600;}
   <strong>CEN Systems</strong> · PMO Hub &nbsp;·&nbsp; <a href="mailto:alceca3000@gmail.com">Alan Cerón Cardonne</a> &nbsp;·&nbsp; PMP® · Six Sigma MBB
 </footer>
 
-<script>
-  const d = new Date();
-  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
-  document.getElementById('hdr-date').textContent = d.toLocaleDateString('es-MX', opts);
-</script>
 </body>
 </html>

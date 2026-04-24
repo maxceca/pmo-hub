@@ -40,37 +40,44 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #f4f6fb;
+      --bg:       #F4F6FB;
       --surface:  #ffffff;
       --surface2: #f1f5f9;
-      --border:   #e2e8f0;
+      --border:   #E2E8F0;
       --border2:  #cbd5e1;
-      --text:     #1e293b;
-      --muted:    #64748b;
+      --text:     #1E293B;
+      --muted:    #64748B;
       --accent:   #97D700;
       --accent-d: #7ab000;
       --green:    #16a34a;
       --red:      #dc2626;
       --amber:    #d97706;
+      --navy:     #1E2761;
+      --ice:      #CADCFC;
       --radius:   10px;
       --radius-lg: 16px;
     }
 
     html { background: var(--bg); color: var(--text); font-family: Open Sans, sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
 
-    body { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+    body { max-width: 720px; margin: 0 auto; padding: 32px 24px 80px; }
+    .hero { margin: -32px -24px 32px; }
 
-    /* ── Header ── */
-    .app-header { display: flex; align-items: center; gap: 14px; margin-bottom: 40px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
-    .logo-wrap { flex-shrink: 0; display: flex; align-items: center; }
-    .logo-img { height: 52px; width: auto; object-fit: contain; filter: brightness(1.05); }
-    .app-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
-    .app-sub { font-size: 13px; color: var(--muted); margin-top: 1px; }
-    .app-author { font-size: 11px; color: #64748b; margin-top: 3px; letter-spacing: 0.1px; }
-    .ver-badge { margin-left: auto; font-size: 11px; font-family: 'DM Mono', monospace; background: rgba(151,215,0,0.15); color: var(--accent); padding: 3px 10px; border-radius: 999px; border: 1px solid rgba(151,215,0,0.25); }
+    /* ── Hero ── */
+    .hero { background: linear-gradient(135deg,#1E2761 0%,#2D3A8C 60%,#1a3a6b 100%); padding: 3.5rem 2rem 3rem; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; right: -5%; top: -20%; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle,rgba(151,215,0,.15) 0%,transparent 70%); }
+    .hero-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-eyebrow { font-size: 11px; font-weight: 600; color: #97D700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+    .hero-eyebrow::before { content: ''; display: block; width: 28px; height: 2px; background: #97D700; }
+    .hero h1 { font-size: clamp(1.8rem,4vw,3rem); font-weight: 700; color: #fff; line-height: 1.1; margin-bottom: .75rem; }
+    .hero h1 span { color: #97D700; }
+    .hero-sub { font-size: 15px; color: #CADCFC; opacity: .85; font-weight: 300; line-height: 1.7; }
+
+    /* ── Animation ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
 
     /* ── Cards / Sections ── */
-    .section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 16px; }
+    .section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(30,39,97,.06); }
     .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
     .step-pill { width: 26px; height: 26px; border-radius: 50%; background: rgba(151,215,0,0.15); border: 1px solid rgba(151,215,0,0.3); color: var(--accent); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'DM Mono', monospace; }
     .section-title { font-size: 14px; font-weight: 500; }
@@ -210,14 +217,13 @@
   </div>
 </nav>
 
-  <header class="app-header">
-    <div>
-      <div class="app-title">Monday Loader</div>
-      <div class="app-sub">PMO · Carga de planes de trabajo</div>
-      <div class="app-author">Mtro. Alan Cerón Cardonne &nbsp;·&nbsp; PMP® &nbsp;·&nbsp; Six Sigma MBB &nbsp;·&nbsp; PMO Manager</div>
-    </div>
-    <div class="ver-badge">v1.0</div>
-  </header>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">PMO Hub · Herramienta de gestión</div>
+    <h1>Monday <span>Loader</span></h1>
+    <p class="hero-sub">Migra planes de trabajo a Monday.com. Carga masiva desde Excel en 4 pasos.</p>
+  </div>
+</div>
 
   <!-- STEP 1 — API Key -->
   <div class="section">
