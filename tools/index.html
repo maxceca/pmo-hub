@@ -742,8 +742,9 @@ async function startLoad() {
           } else if (col.type === 'color' || col.type === 'status') {
             if (/estado|status|semáforo|semaforo/.test(t)) {
               const sl = statusLabel(overallPct, _projEnd);
-              const _pl = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
-              pcv[col.id] = { label: _pl[sl] || sl };
+              // indices confirmados: 0=En riesgo  1=Al dia  2=Atrasado
+              const _pi = { 'Done': 1, 'Working on it': 1, 'Not Started': 0, 'Stuck': 2 };
+              pcv[col.id] = { index: _pi[sl] ?? 0 };
             }
           } else if (col.type === 'dropdown') {
             if (/estado|status|semáforo|semaforo/.test(t)) {
@@ -981,8 +982,9 @@ async function startUpdate(apiKey) {
             if (col.type === 'numbers' && /avance|progreso|%|complete|pct|porcentaje/.test(t))
               pcv2[col.id] = String(uOverallPct);
             else if ((col.type === 'color' || col.type === 'status') && /estado|status|semáforo|semaforo/.test(t)) {
-              const _pl2 = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
-              pcv2[col.id] = { label: _pl2[uSl] || uSl };
+              // indices confirmados: 0=En riesgo  1=Al dia  2=Atrasado
+              const _pi2 = { 'Done': 1, 'Working on it': 1, 'Not Started': 0, 'Stuck': 2 };
+              pcv2[col.id] = { index: _pi2[uSl] ?? 0 };
             } else if (col.type === 'dropdown' && /estado|status|semáforo|semaforo/.test(t)) {
               const _pl2 = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
               pcv2[col.id] = { labels: [_pl2[uSl] || uSl] };
