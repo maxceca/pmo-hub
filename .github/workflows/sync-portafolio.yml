@@ -1,0 +1,36 @@
+name: Sync Portafolio Hub
+
+on:
+  workflow_dispatch:   # disparo manual desde SKILL.md o GitHub UI
+  repository_dispatch: # disparo programatico (opcional)
+    types: [portafolio-updated]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout pmo-hub
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sincronizar portafolio desde portafolio-cen
+        run: python sync_portafolio.py
+
+      - name: Commit y push si hay cambios
+        run: |
+          git config user.name  "PMO Sync Bot"
+          git config user.email "bot@censys-pmo-hub.local"
+          git add portafolio/index.html
+          git diff --cached --quiet && echo "Sin cambios, nada que commitear." || \
+            (git commit -m "sync: portafolio actualizado desde portafolio-cen $(date '+%Y-%m-%d %H:%M UTC')" \
+             && git push origin main)
