@@ -40,18 +40,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0d0f14;
-      --surface:  #161923;
-      --surface2: #1e2330;
-      --border:   rgba(255,255,255,0.08);
-      --border2:  rgba(255,255,255,0.14);
-      --text:     #e8eaf0;
-      --muted:    #7a8099;
+      --bg:       #f4f6fb;
+      --surface:  #ffffff;
+      --surface2: #f1f5f9;
+      --border:   #e2e8f0;
+      --border2:  #cbd5e1;
+      --text:     #1e293b;
+      --muted:    #64748b;
       --accent:   #97D700;
       --accent-d: #7ab000;
-      --green:    #22c55e;
-      --red:      #ef4444;
-      --amber:    #f59e0b;
+      --green:    #16a34a;
+      --red:      #dc2626;
+      --amber:    #d97706;
       --radius:   10px;
       --radius-lg: 16px;
     }
@@ -112,9 +112,9 @@
     /* ── File chips ── */
     .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
     .chip { font-size: 11px; font-family: 'DM Mono', monospace; padding: 3px 9px; border-radius: 999px; border: 1px solid; }
-    .chip-blue  { background: rgba(151,215,0,0.1); color: #93c5fd; border-color: rgba(151,215,0,0.25); }
-    .chip-green { background: rgba(34,197,94,0.1);  color: #86efac; border-color: rgba(34,197,94,0.25); }
-    .chip-amber { background: rgba(245,158,11,0.1); color: #fcd34d; border-color: rgba(245,158,11,0.25); }
+    .chip-blue  { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+    .chip-green { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+    .chip-amber { background: #fffbeb; color: #d97706; border-color: #fde68a; }
 
     /* ── Options ── */
     .opt-row { display: flex; flex-direction: column; gap: 10px; }
@@ -141,27 +141,27 @@
     .progress-label { font-size: 12px; color: var(--muted); margin-top: 6px; font-family: 'DM Mono', monospace; }
 
     /* ── Log console ── */
-    .console { background: #0a0c10; border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-top: 14px; display: none; max-height: 280px; overflow-y: auto; }
+    .console { background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-top: 14px; display: none; max-height: 280px; overflow-y: auto; }
     .console::-webkit-scrollbar { width: 4px; }
     .console::-webkit-scrollbar-track { background: transparent; }
     .console::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
     .log-line { font-family: 'DM Mono', monospace; font-size: 12px; line-height: 1.8; white-space: pre-wrap; word-break: break-all; }
-    .l-ok   { color: #4ade80; }
-    .l-err  { color: #f87171; }
-    .l-info { color: #60a5fa; }
-    .l-warn { color: #fbbf24; }
-    .l-muted{ color: #4b5563; }
+    .l-ok   { color: #16a34a; }
+    .l-err  { color: #dc2626; }
+    .l-info { color: #2563eb; }
+    .l-warn { color: #d97706; }
+    .l-muted{ color: #94a3b8; }
 
     /* ── Result banner ── */
     .result-banner { border-radius: var(--radius); padding: 16px 18px; margin-top: 14px; display: none; }
-    .result-ok  { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); }
-    .result-err { background: rgba(239,68,68,0.08);  border: 1px solid rgba(239,68,68,0.25); }
+    .result-ok  { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .result-err { background: #fef2f2; border: 1px solid #fecaca; }
     .result-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-    .result-ok  .result-title { color: #4ade80; }
-    .result-err .result-title { color: #f87171; }
+    .result-ok  .result-title { color: #16a34a; }
+    .result-err .result-title { color: #dc2626; }
     .result-body { font-size: 13px; color: var(--muted); }
     .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
-    .stat-box { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 10px; text-align: center; }
+    .stat-box { background: #f1f5f9; border-radius: 8px; padding: 10px; text-align: center; }
     .stat-n { font-size: 22px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
     .stat-l { font-size: 11px; color: var(--muted); margin-top: 2px; }
     .board-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 12px; color: var(--accent); font-family: 'DM Mono', monospace; text-decoration: none; }
