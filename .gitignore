@@ -1,0 +1,13 @@
+# Build script — no va al repo
+build.py
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Archivos de desarrollo
+*.tmp
