@@ -226,6 +226,8 @@ def group_by_month(daily: dict) -> dict:
     """month_str → {total_min, busy_min, tent_min, work_days, daily}"""
     months: dict[str, dict] = {}
     for d, vals in daily.items():
+        if d.year < 2026:
+            continue
         key = d.strftime("%Y-%m")
         if key not in months:
             months[key] = {"total_min": 0, "busy_min": 0, "tent_min": 0,
