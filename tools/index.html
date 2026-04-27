@@ -780,10 +780,19 @@ async function startLoad() {
 
         // Match columns by title (case-insensitive, partial match)
         const pcv = {};
+        // dropdown: verify label exists in settings_str before setting
         const _dropCheck = (col, desired) => {
           let opts = [];
           try { opts = (JSON.parse(col.settings_str || '{}').labels || []).map(l => (l.name || l).toLowerCase()); } catch(_) {}
           return opts.length === 0 || opts.includes(desired.toLowerCase());
+        };
+        // status/color: find index for a label from settings_str; returns {index:N} or null
+        const _statusIdx = (col, desired) => {
+          try {
+            const labels = JSON.parse(col.settings_str || '{}').labels || {};
+            const match = Object.entries(labels).find(([,v]) => v.toLowerCase() === desired.toLowerCase());
+            return match ? { index: parseInt(match[0]) } : null;
+          } catch(_) { return null; }
         };
         for (const col of pBoard.columns) {
           const t = col.title.toLowerCase();
@@ -817,13 +826,16 @@ async function startLoad() {
           } else if (col.type === 'color' || col.type === 'status') {
             if (/estado|status|semáforo|semaforo|rag/.test(t)) {
               const sl = statusLabel(overallPct, _projEnd);
-              // indices confirmados: 0=En riesgo  1=Al dia  2=Atrasado
-              const _pi = { 'Done': 1, 'Working on it': 1, 'Not Started': 0, 'Stuck': 2 };
-              pcv[col.id] = { index: _pi[sl] ?? 0 };
+              const _pl = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
+              const sv = _statusIdx(col, _pl[sl] || sl);
+              if (sv) pcv[col.id] = sv;
+              else { const _pi = { 'Done': 1, 'Working on it': 1, 'Not Started': 0, 'Stuck': 2 }; pcv[col.id] = { index: _pi[sl] ?? 0 }; }
             } else if (/etapa|stage|fase/.test(t) && projEtapa) {
-              pcv[col.id] = { label: projEtapa };
+              const sv = _statusIdx(col, projEtapa);
+              if (sv) pcv[col.id] = sv;
             } else if (/prioridad|priority/.test(t) && projPriority) {
-              pcv[col.id] = { label: projPriority };
+              const sv = _statusIdx(col, projPriority);
+              if (sv) pcv[col.id] = sv;
             }
           } else if (col.type === 'dropdown') {
             if (/estado|status|semáforo|semaforo|rag/.test(t)) {
@@ -1066,14 +1078,22 @@ async function startUpdate(apiKey) {
             try { opts = (JSON.parse(col.settings_str || '{}').labels || []).map(l => (l.name || l).toLowerCase()); } catch(_) {}
             return opts.length === 0 || opts.includes(desired.toLowerCase());
           };
+          const _si2 = (col, desired) => {
+            try {
+              const labels = JSON.parse(col.settings_str || '{}').labels || {};
+              const match = Object.entries(labels).find(([,v]) => v.toLowerCase() === desired.toLowerCase());
+              return match ? { index: parseInt(match[0]) } : null;
+            } catch(_) { return null; }
+          };
           for (const col of pBoard2.columns) {
             const t = col.title.toLowerCase();
             if (col.type === 'numbers' && /avance|progreso|%|complete|pct|porcentaje/.test(t))
               pcv2[col.id] = String(uOverallPct);
             else if ((col.type === 'color' || col.type === 'status') && /estado|status|semáforo|semaforo|rag/.test(t)) {
-              // indices confirmados: 0=En riesgo  1=Al dia  2=Atrasado
-              const _pi2 = { 'Done': 1, 'Working on it': 1, 'Not Started': 0, 'Stuck': 2 };
-              pcv2[col.id] = { index: _pi2[uSl] ?? 0 };
+              const _pl2 = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
+              const sv2 = _si2(col, _pl2[uSl] || uSl);
+              if (sv2) pcv2[col.id] = sv2;
+              else { const _pi2 = { 'Done': 1, 'Working on it': 1, 'Not Started': 0, 'Stuck': 2 }; pcv2[col.id] = { index: _pi2[uSl] ?? 0 }; }
             } else if (col.type === 'dropdown' && /estado|status|semáforo|semaforo|rag/.test(t)) {
               const _pl2 = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
               const desiredLabel2 = _pl2[uSl] || uSl;
