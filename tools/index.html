@@ -93,6 +93,10 @@
     }
     input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(151,215,0,0.12); }
     input::placeholder { color: var(--muted); opacity: 0.7; }
+    select { width: 100%; padding: 9px 12px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); color: var(--text); font-family: Open Sans, sans-serif; font-size: 14px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+    select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(151,215,0,0.12); }
+    select option { background: var(--surface2); color: var(--text); }
+    .portf-sep { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin: 14px 0 10px; padding-top: 12px; border-top: 1px solid var(--border); font-weight: 600; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 
@@ -268,6 +272,49 @@
           <input type="text" id="pmName" placeholder="Alan Cerón" />
         </div>
       </div>
+
+      <!-- ── Portafolio CEN fields ── -->
+      <div class="portf-sep">📋 Datos del Portafolio CEN</div>
+      <div class="grid-2">
+        <div class="field">
+          <label class="lbl">Nombre del Proyecto <span style="font-weight:400;opacity:.7">(nombre limpio, sin código)</span></label>
+          <input type="text" id="projName" placeholder="Renovación Infraestructura WLAN" />
+        </div>
+        <div class="field">
+          <label class="lbl">Cliente</label>
+          <input type="text" id="projClient" placeholder="Colegio de México" />
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label class="lbl">Etapa</label>
+          <select id="projEtapa">
+            <option value="">— seleccionar —</option>
+            <option value="En curso" selected>En curso</option>
+            <option value="Más adelante">Más adelante</option>
+            <option value="Completado">Completado</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lbl">Prioridad</label>
+          <select id="projPriority">
+            <option value="">— seleccionar —</option>
+            <option value="Alta">Alta</option>
+            <option value="Media" selected>Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label class="lbl">Nombre contacto cliente <span style="font-weight:400;opacity:.7">(opcional)</span></label>
+          <input type="text" id="clientContact" placeholder="Ing. Juan García" />
+        </div>
+        <div class="field">
+          <label class="lbl">Correo cliente <span style="font-weight:400;opacity:.7">(opcional)</span></label>
+          <input type="text" id="clientEmail" placeholder="juan.garcia@cliente.com" />
+        </div>
+      </div>
     </div>
 
     <!-- UPDATE mode fields -->
@@ -338,7 +385,7 @@
         <input type="checkbox" id="optPortfolio" checked />
         <div>
           <div>Registrar en Portafolio de Proyectos CEN</div>
-          <div class="opt-desc">Crea un ítem en el tablero portafolio con código PRY, PM y enlace al nuevo tablero</div>
+          <div class="opt-desc">Registra en el portafolio: PRY, PM, Cliente, Etapa, Prioridad, fechas y % avance</div>
         </div>
       </label>
     </div>
@@ -538,6 +585,12 @@ async function startLoad() {
   const boardName     = document.getElementById('boardName').value.trim();
   const projCode      = document.getElementById('projCode').value.trim();
   const pmName        = document.getElementById('pmName').value.trim();
+  const projName      = document.getElementById('projName').value.trim();
+  const projClient    = document.getElementById('projClient').value.trim();
+  const projEtapa     = document.getElementById('projEtapa').value;
+  const projPriority  = document.getElementById('projPriority').value;
+  const clientContact = document.getElementById('clientContact').value.trim();
+  const clientEmail   = document.getElementById('clientEmail').value.trim();
   const optStatus     = document.getElementById('optStatus').checked;
   const optSkip       = document.getElementById('optSkip').checked;
   const optPortfolio  = document.getElementById('optPortfolio').checked;
@@ -727,6 +780,11 @@ async function startLoad() {
 
         // Match columns by title (case-insensitive, partial match)
         const pcv = {};
+        const _dropCheck = (col, desired) => {
+          let opts = [];
+          try { opts = (JSON.parse(col.settings_str || '{}').labels || []).map(l => (l.name || l).toLowerCase()); } catch(_) {}
+          return opts.length === 0 || opts.includes(desired.toLowerCase());
+        };
         for (const col of pBoard.columns) {
           const t = col.title.toLowerCase();
           if (col.type === 'text' || col.type === 'long_text') {
@@ -734,30 +792,49 @@ async function startLoad() {
               pcv[col.id] = pmName;
             else if (/código|codigo|pry|clave|cen|proyecto id|project id/.test(t) && projCode)
               pcv[col.id] = projCode;
+            else if (/nombre del proyecto|nombre proyecto/.test(t) && projName)
+              pcv[col.id] = projName;
+            else if (/^cliente$|nombre.*cliente$|empresa.*cliente/.test(t) && projClient)
+              pcv[col.id] = projClient;
+            else if (/responsable.*cliente|nombre.*responsable.*cliente|contacto.*cliente/.test(t) && clientContact)
+              pcv[col.id] = clientContact;
+            else if (/puesto.*cliente|cargo.*cliente|rol.*cliente/.test(t) && clientContact)
+              pcv[col.id] = clientContact;
+            else if (/(correo|email|mail).*cliente|correo.*cliente/.test(t) && clientEmail)
+              pcv[col.id] = clientEmail;
             else if (/tablero|board|link|url|liga|enlace|vinculo|vínculo/.test(t))
               pcv[col.id] = 'https://monday.com/boards/' + boardId;
+            else if (/cronograma real|calendario real/.test(t) && _allStarts.length && _allEnds.length)
+              pcv[col.id] = _allStarts.sort()[0] + ' - ' + _allEnds.sort().at(-1);
+          } else if (col.type === 'email') {
+            if (/correo|email|mail/.test(t) && clientEmail)
+              pcv[col.id] = { email: clientEmail, text: clientEmail };
           } else if (col.type === 'link') {
             pcv[col.id] = { url: 'https://monday.com/boards/' + boardId, text: boardName };
           } else if (col.type === 'numbers') {
             if (/avance|progreso|%|complete|pct|porcentaje/.test(t))
               pcv[col.id] = String(overallPct);
           } else if (col.type === 'color' || col.type === 'status') {
-            if (/estado|status|semáforo|semaforo/.test(t)) {
+            if (/estado|status|semáforo|semaforo|rag/.test(t)) {
               const sl = statusLabel(overallPct, _projEnd);
               // indices confirmados: 0=En riesgo  1=Al dia  2=Atrasado
               const _pi = { 'Done': 1, 'Working on it': 1, 'Not Started': 0, 'Stuck': 2 };
               pcv[col.id] = { index: _pi[sl] ?? 0 };
+            } else if (/etapa|stage|fase/.test(t) && projEtapa) {
+              pcv[col.id] = { label: projEtapa };
+            } else if (/prioridad|priority/.test(t) && projPriority) {
+              pcv[col.id] = { label: projPriority };
             }
           } else if (col.type === 'dropdown') {
-            if (/estado|status|semáforo|semaforo/.test(t)) {
+            if (/estado|status|semáforo|semaforo|rag/.test(t)) {
               const sl = statusLabel(overallPct, _projEnd);
               const _pl = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
               const desiredLabel = _pl[sl] || sl;
-              // Verify the label exists in this dropdown's options before assigning
-              let dropOpts = [];
-              try { dropOpts = (JSON.parse(col.settings_str || '{}').labels || []).map(l => (l.name || l).toLowerCase()); } catch(_) {}
-              if (dropOpts.length === 0 || dropOpts.includes(desiredLabel.toLowerCase()))
-                pcv[col.id] = { labels: [desiredLabel] };
+              if (_dropCheck(col, desiredLabel)) pcv[col.id] = { labels: [desiredLabel] };
+            } else if (/etapa|stage|fase/.test(t) && projEtapa) {
+              if (_dropCheck(col, projEtapa)) pcv[col.id] = { labels: [projEtapa] };
+            } else if (/prioridad|priority/.test(t) && projPriority) {
+              if (_dropCheck(col, projPriority)) pcv[col.id] = { labels: [projPriority] };
             }
           } else if (col.type === 'date') {
             if (/inicio|start|comienzo|begin/.test(t) && _allStarts.length)
@@ -984,28 +1061,31 @@ async function startUpdate(apiKey) {
           const uSl         = statusLabel(uOverallPct, _uProjEnd);
 
           const pcv2 = {};
+          const _dc2 = (col, desired) => {
+            let opts = [];
+            try { opts = (JSON.parse(col.settings_str || '{}').labels || []).map(l => (l.name || l).toLowerCase()); } catch(_) {}
+            return opts.length === 0 || opts.includes(desired.toLowerCase());
+          };
           for (const col of pBoard2.columns) {
             const t = col.title.toLowerCase();
             if (col.type === 'numbers' && /avance|progreso|%|complete|pct|porcentaje/.test(t))
               pcv2[col.id] = String(uOverallPct);
-            else if ((col.type === 'color' || col.type === 'status') && /estado|status|semáforo|semaforo/.test(t)) {
+            else if ((col.type === 'color' || col.type === 'status') && /estado|status|semáforo|semaforo|rag/.test(t)) {
               // indices confirmados: 0=En riesgo  1=Al dia  2=Atrasado
               const _pi2 = { 'Done': 1, 'Working on it': 1, 'Not Started': 0, 'Stuck': 2 };
               pcv2[col.id] = { index: _pi2[uSl] ?? 0 };
-            } else if (col.type === 'dropdown' && /estado|status|semáforo|semaforo/.test(t)) {
+            } else if (col.type === 'dropdown' && /estado|status|semáforo|semaforo|rag/.test(t)) {
               const _pl2 = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
               const desiredLabel2 = _pl2[uSl] || uSl;
-              // Verify the label exists in this dropdown's options before assigning
-              let dropOpts2 = [];
-              try { dropOpts2 = (JSON.parse(col.settings_str || '{}').labels || []).map(l => (l.name || l).toLowerCase()); } catch(_) {}
-              if (dropOpts2.length === 0 || dropOpts2.includes(desiredLabel2.toLowerCase()))
-                pcv2[col.id] = { labels: [desiredLabel2] };
-            }
-            else if (col.type === 'date') {
+              if (_dc2(col, desiredLabel2)) pcv2[col.id] = { labels: [desiredLabel2] };
+            } else if (col.type === 'date') {
               if (/inicio|start|comienzo|begin/.test(t) && _uAllStarts.length)
                 pcv2[col.id] = { date: _uAllStarts.sort()[0] };
               else if (/fin|end|entrega|término|termino|cierre/.test(t) && _uProjEnd)
                 pcv2[col.id] = { date: _uProjEnd };
+            } else if (col.type === 'text' || col.type === 'long_text') {
+              if (/cronograma real|calendario real/.test(t) && _uAllStarts.length && _uAllEnds.length)
+                pcv2[col.id] = _uAllStarts.sort()[0] + ' - ' + (_uAllEnds.sort().at(-1));
             }
           }
 
