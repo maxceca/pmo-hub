@@ -705,7 +705,7 @@ async function startLoad() {
         // Query portfolio columns and groups
         const pb = await gql(apiKey, `{
           boards(ids: [${PORTFOLIO_BOARD_ID}]) {
-            columns { id title type }
+            columns { id title type settings_str }
             groups { id title }
           }
         }`);
@@ -752,7 +752,12 @@ async function startLoad() {
             if (/estado|status|semáforo|semaforo/.test(t)) {
               const sl = statusLabel(overallPct, _projEnd);
               const _pl = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
-              pcv[col.id] = { labels: [_pl[sl] || sl] };
+              const desiredLabel = _pl[sl] || sl;
+              // Verify the label exists in this dropdown's options before assigning
+              let dropOpts = [];
+              try { dropOpts = (JSON.parse(col.settings_str || '{}').labels || []).map(l => (l.name || l).toLowerCase()); } catch(_) {}
+              if (dropOpts.length === 0 || dropOpts.includes(desiredLabel.toLowerCase()))
+                pcv[col.id] = { labels: [desiredLabel] };
             }
           } else if (col.type === 'date') {
             if (/inicio|start|comienzo|begin/.test(t) && _allStarts.length)
@@ -952,7 +957,7 @@ async function startUpdate(apiKey) {
         // Fetch portfolio columns + items (paginated)
         const pb2 = await gql(apiKey, `{
           boards(ids: [${PORTFOLIO_BOARD_ID}]) {
-            columns { id title type }
+            columns { id title type settings_str }
             items_page(limit: 500) { cursor items { id name } }
           }
         }`);
@@ -989,7 +994,12 @@ async function startUpdate(apiKey) {
               pcv2[col.id] = { index: _pi2[uSl] ?? 0 };
             } else if (col.type === 'dropdown' && /estado|status|semáforo|semaforo/.test(t)) {
               const _pl2 = { 'Done': 'Al día', 'Working on it': 'Al día', 'Not Started': 'En riesgo', 'Stuck': 'Atrasado' };
-              pcv2[col.id] = { labels: [_pl2[uSl] || uSl] };
+              const desiredLabel2 = _pl2[uSl] || uSl;
+              // Verify the label exists in this dropdown's options before assigning
+              let dropOpts2 = [];
+              try { dropOpts2 = (JSON.parse(col.settings_str || '{}').labels || []).map(l => (l.name || l).toLowerCase()); } catch(_) {}
+              if (dropOpts2.length === 0 || dropOpts2.includes(desiredLabel2.toLowerCase()))
+                pcv2[col.id] = { labels: [desiredLabel2] };
             }
             else if (col.type === 'date') {
               if (/inicio|start|comienzo|begin/.test(t) && _uAllStarts.length)
