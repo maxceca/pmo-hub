@@ -310,6 +310,8 @@ DAY_ABBR = ["L", "M", "M", "J", "V"]
 
 
 def badge_class(p: float) -> str:
+    if p > 100:
+        return "badge-over"
     if p < 70:
         return "badge-green"
     if p <= 90:
@@ -318,6 +320,8 @@ def badge_class(p: float) -> str:
 
 
 def bar_class(p: float) -> str:
+    if p > 100:
+        return "bar-over"
     if p < 70:
         return "bar-green"
     if p <= 90:
@@ -360,9 +364,16 @@ def build_weekly_breakdown(monthly_daily: dict, year: int, month: int) -> str:
             dvals = monthly_daily.get(d.isoformat(), {})
             dm = dvals.get("total_min", 0)
             dp = round(dm / WORK_MIN_PER_DAY * 100)
-            dp = min(dp, 100)
-            cls = "dc-green" if dp < 70 else ("dc-amber" if dp <= 90 else "dc-red")
-            tip = f"{DAY_ABBR[d.weekday()]} {d.day}: {dp}%"
+            holiday_mark = " 🎌" if is_holiday(d) else ""
+            if dp > 100:
+                cls = "dc-over"
+            elif dp < 70:
+                cls = "dc-green"
+            elif dp <= 90:
+                cls = "dc-amber"
+            else:
+                cls = "dc-red"
+            tip = f"{DAY_ABBR[d.weekday()]} {d.day}{holiday_mark}: {dp}%"
             cells += (f'<div class="day-cell {cls}" title="{tip}">'
                       f'<span class="dc-abbr">{DAY_ABBR[d.weekday()]}</span>'
                       f'<span class="dc-val">{dp}%</span></div>')
@@ -668,6 +679,7 @@ body {{ font-family: 'Open Sans', sans-serif; background: var(--off); color: var
 .badge-green {{ background:var(--green-lt); color:var(--green); }}
 .badge-amber {{ background:var(--amber-lt); color:var(--amber); }}
 .badge-red   {{ background:var(--red-lt);   color:var(--red); }}
+.badge-over  {{ background:#f3e8ff; color:#7c3aed; }}
 
 /* barra */
 .pm-bar-wrap {{
@@ -678,6 +690,7 @@ body {{ font-family: 'Open Sans', sans-serif; background: var(--off); color: var
 .bar-green {{ background:var(--green); }}
 .bar-amber {{ background:var(--amber); }}
 .bar-red   {{ background:var(--red); }}
+.bar-over  {{ background:#7c3aed; }}
 
 /* detalle busy/tent */
 .pm-detail {{ display:flex; gap:1rem; margin-bottom:1rem; flex-wrap:wrap; }}
@@ -700,6 +713,7 @@ body {{ font-family: 'Open Sans', sans-serif; background: var(--off); color: var
 .dc-green {{ background:var(--green-lt); color:var(--green); }}
 .dc-amber {{ background:var(--amber-lt); color:var(--amber); }}
 .dc-red   {{ background:var(--red-lt);   color:var(--red); }}
+.dc-over  {{ background:#f3e8ff; color:#7c3aed; border:1.5px solid #c4b5fd; }}
 
 /* ── CHART ── */
 .chart-section {{
@@ -878,8 +892,8 @@ function showMonth(month, btn) {{
     const safeName = name.replace(/ /g, '-');
     const vals    = mdata[month] || {{pct:0, busy_min:0, tent_min:0}};
     const p       = vals.pct;
-    const bcls    = p < 70 ? 'badge-green' : (p <= 90 ? 'badge-amber' : 'badge-red');
-    const brcls   = p < 70 ? 'bar-green'   : (p <= 90 ? 'bar-amber'   : 'bar-red');
+    const bcls    = p > 100 ? 'badge-over' : (p < 70 ? 'badge-green' : (p <= 90 ? 'badge-amber' : 'badge-red'));
+    const brcls   = p > 100 ? 'bar-over'   : (p < 70 ? 'bar-green'   : (p <= 90 ? 'bar-amber'   : 'bar-red'));
 
     const badge = document.getElementById('badge-' + safeName);
     const bar   = document.getElementById('bar-'   + safeName);
