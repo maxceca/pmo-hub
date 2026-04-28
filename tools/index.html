@@ -10,8 +10,8 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
 /* === Censys PMO Hub - Nav compartido === */.pmo-hub-nav{display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;height:52px;background:#1a1a2e;border-bottom:3px solid #97D700;
-  position:sticky;top:0;z-index:9999;font-family:'Open Sans',sans-serif;
+  padding:0 24px;height:52px;background:#101820;border-bottom:3px solid #97D700;
+  position:sticky;top:0;z-index:9999;font-family:'Avenir','Open Sans',system-ui,sans-serif;
   box-sizing:border-box;}
 .pmo-nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
 .pmo-nav-logo img{height:30px;width:auto;}
@@ -26,7 +26,7 @@
 .pmo-nav-links a.active{background:rgba(151,215,0,.2);color:#fff;font-weight:600;}
 .pmo-sub-nav{display:flex;align-items:center;gap:4px;padding:0 24px;height:40px;
   background:#f0f2f5;border-bottom:1px solid #dde1e7;
-  font-family:'Open Sans',sans-serif;position:sticky;top:52px;z-index:9998;}
+  font-family:'Avenir','Open Sans',system-ui,sans-serif;position:sticky;top:52px;z-index:9998;}
 .pmo-sub-nav a{font-size:12px;font-weight:600;color:#4b5563;text-decoration:none;
   padding:4px 12px;border-radius:5px;transition:all .15s;}
 .pmo-sub-nav a:hover{background:#97D700;color:#fff;}
@@ -39,33 +39,32 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #F4F6FB;
+      --bg:       #F5F5F5;
       --surface:  #ffffff;
       --surface2: #f1f5f9;
       --border:   #E2E8F0;
       --border2:  #cbd5e1;
-      --text:     #1E293B;
-      --muted:    #64748B;
+      --text:     #101820;
+      --muted:    #717C7D;
       --accent:   #97D700;
       --accent-d: #7ab000;
       --green:    #16a34a;
       --red:      #dc2626;
       --amber:    #d97706;
-      --navy:     #1E2761;
+      --navy:     #101820;
       --ice:      #CADCFC;
       --radius:   10px;
       --radius-lg: 16px;
     }
 
-    html { background: var(--bg); color: var(--text); font-family: Open Sans, sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    html { background: var(--bg); color: var(--text); font-family: 'Avenir','Open Sans',system-ui,sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; }
 
-    body { max-width: 720px; margin: 0 auto; padding: 32px 24px 80px; }
-    .hero { margin: -32px -24px 32px; }
+    body { padding: 0; }
+    .page-content { max-width: 720px; margin: 0 auto; padding: 32px 24px 80px; }
 
     /* ── Hero ── */
-    .hero { background: linear-gradient(135deg,#1E2761 0%,#2D3A8C 60%,#1a3a6b 100%); padding: 3.5rem 2rem 3rem; position: relative; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; right: -5%; top: -20%; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle,rgba(151,215,0,.15) 0%,transparent 70%); }
-    .hero-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero { background: #101820; padding: 3.5rem 2rem 3rem; position: relative; border-bottom: 4px solid #97D700; }
+    .hero-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; padding: 0 2rem; }
     .hero-eyebrow { font-size: 11px; font-weight: 600; color: #97D700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
     .hero-eyebrow::before { content: ''; display: block; width: 28px; height: 2px; background: #97D700; }
     .hero h1 { font-size: clamp(1.8rem,4vw,3rem); font-weight: 700; color: #fff; line-height: 1.1; margin-bottom: .75rem; }
@@ -135,7 +134,7 @@
     /* ── Primary button ── */
     .btn-load {
       width: 100%; padding: 13px; margin-top: 8px;
-      background: var(--accent); color: #1a1a2e; border: none;
+      background: var(--accent); color: #ffffff; border: none;
       border-radius: var(--radius); font-size: 15px; font-weight: 600;
       font-family: Open Sans, sans-serif; cursor: pointer; letter-spacing: -0.2px;
       transition: background 0.15s, transform 0.1s, opacity 0.15s;
@@ -195,7 +194,7 @@
 
     /* ── Responsive ── */
     @media (max-width: 540px) {
-      body { padding: 28px 16px 60px; }
+      .page-content { padding: 28px 16px 60px; }
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
       .stat-grid { grid-template-columns: repeat(3, 1fr); }
     }
@@ -228,6 +227,7 @@
   </div>
 </div>
 
+<div class="page-content">
   <!-- STEP 1 — API Key -->
   <div class="section">
     <div class="section-header">
@@ -419,6 +419,7 @@
     <div class="footer-main">CEN Systems PMO &nbsp;·&nbsp; Monday Loader v1.0</div>
     <div class="footer-credit">Diseñado y desarrollado por <strong>Mtro. Alan Cerón Cardonne</strong> · PMP® · Six Sigma MBB · PMO Manager</div>
   </footer>
+</div><!-- /page-content -->
 
 <script>
 /* ─────────────────────────────────────────────────────────────

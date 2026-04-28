@@ -528,8 +528,8 @@ def generate_html(pm_data: dict) -> str:
 <style>
 /* === Censys PMO Hub - Nav compartido === */
 .pmo-hub-nav{{display:flex;align-items:center;justify-content:space-between;
-  padding:0 24px;height:52px;background:#1a1a2e;border-bottom:3px solid #97D700;
-  position:sticky;top:0;z-index:9999;font-family:'Open Sans',sans-serif;
+  padding:0 24px;height:52px;background:#101820;border-bottom:3px solid #97D700;
+  position:sticky;top:0;z-index:9999;font-family:'Avenir','Open Sans',system-ui,sans-serif;
   box-sizing:border-box;}}
 .pmo-nav-logo{{display:flex;align-items:center;gap:10px;text-decoration:none;}}
 .pmo-nav-logo img{{height:30px;width:auto;}}
@@ -546,18 +546,18 @@ def generate_html(pm_data: dict) -> str:
 /* ══════════════════════════════════════════════════════ */
 
 :root {{
-  --navy: #1E2761; --navy-mid: #2D3A8C; --navy-lt: #3D4EA0;
+  --navy: #101820; --navy-mid: #101820; --navy-lt: #333d47;
   --teal: #97D700; --teal-lt: #7ab000;
   --ice: #CADCFC;
-  --white: #ffffff; --off: #F4F6FB;
-  --text: #1E293B; --muted: #64748B; --border: #E2E8F0;
+  --white: #ffffff; --off: #F5F5F5;
+  --text: #101820; --muted: #717C7D; --border: #E2E8F0;
   --green: #16A34A; --green-lt: #DCFCE7;
   --amber: #D97706; --amber-lt: #FEF3C7;
   --red: #DC2626; --red-lt: #FEE2E2;
 }}
 *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
 html {{ scroll-behavior: smooth; }}
-body {{ font-family: 'Open Sans', sans-serif; background: var(--off); color: var(--text); line-height: 1.6; }}
+body {{ font-family: 'Avenir','Open Sans',system-ui,sans-serif; background: var(--off); color: var(--text); line-height: 1.6; }}
 
 @keyframes fadeUp {{
   from {{ opacity:0; transform:translateY(18px); }}
@@ -566,19 +566,10 @@ body {{ font-family: 'Open Sans', sans-serif; background: var(--off); color: var
 
 /* ── HERO ── */
 .hero {{
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #1a3a6b 100%);
+  background: #101820;
   padding: 4rem 2rem 3rem;
-  position: relative; overflow: hidden;
-}}
-.hero::before {{
-  content:''; position:absolute; right:-5%; top:-20%;
-  width:500px; height:500px; border-radius:50%;
-  background:radial-gradient(circle, rgba(151,215,0,.25) 0%, transparent 70%);
-}}
-.hero::after {{
-  content:''; position:absolute; right:15%; bottom:-30%;
-  width:300px; height:300px; border-radius:50%;
-  background:radial-gradient(circle, rgba(45,58,140,.4) 0%, transparent 70%);
+  position: relative;
+  border-bottom: 4px solid #97D700;
 }}
 .hero-inner {{
   max-width:1200px; margin:0 auto; position:relative; z-index:1;
@@ -642,7 +633,7 @@ body {{ font-family: 'Open Sans', sans-serif; background: var(--off); color: var
   font-size:12px; font-weight:600; padding:6px 16px; border-radius:20px;
   border:1.5px solid var(--border); background:var(--white);
   color:var(--muted); cursor:pointer; transition:all .15s;
-  font-family:'Open Sans',sans-serif;
+  font-family:'Avenir','Open Sans',system-ui,sans-serif;
 }}
 .mtab:hover {{ border-color:var(--navy-mid); color:var(--navy-mid); }}
 .mtab.active {{ background:var(--navy); color:var(--white); border-color:var(--navy); }}
