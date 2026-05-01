@@ -922,7 +922,7 @@ async function startUpdate(apiKey) {
     const boardQ = await gql(apiKey, `{
       boards(ids: [${boardId}]) {
         name
-        columns { id title type }
+        columns { id title type settings_str }
         groups { id title }
         items_page(limit: 500) { cursor items { id name } }
       }
@@ -983,7 +983,27 @@ async function startUpdate(apiKey) {
       if (colByTitle['Predecesoras'])    cv[colByTitle['Predecesoras']]    = (t['Dependencias'] || t['Predecessors'] || '').toString();
       if (optStatus && colByTitle['Estado']) {
         const sl = statusLabel(pctReal, endStr);
-        cv[colByTitle['Estado']] = { label: sl };
+        const statusCol = board.columns.find(c => c.title === 'Estado');
+        let statusVal = { index: 0 };
+        if (statusCol) {
+          let lblMap = {};
+          try { lblMap = JSON.parse(statusCol.settings_str || '{}').labels || {}; } catch(_) {}
+          const entries = Object.entries(lblMap);
+          if (entries.length) {
+            const find = kws => entries.find(([,v]) => kws.some(k => v.toLowerCase().includes(k)));
+            const doneE    = find(['listo','done','complet','terminad','cerrad']);
+            const workE    = find(['curso','progress','working','activ','en curso']);
+            const stuckE   = find(['deteni','stuck','bloqueado','parad']);
+            const map = {
+              'Done':          doneE  ? parseInt(doneE[0])  : 1,
+              'Working on it': workE  ? parseInt(workE[0])  : 0,
+              'Not Started':   workE  ? parseInt(workE[0])  : 0,
+              'Stuck':         stuckE ? parseInt(stuckE[0]) : (entries.length > 2 ? parseInt(entries[entries.length-1][0]) : 2),
+            };
+            statusVal = { index: map[sl] ?? 0 };
+          }
+        }
+        cv[colByTitle['Estado']] = statusVal;
       }
 
       if (!itemId) {
