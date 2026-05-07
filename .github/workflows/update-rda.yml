@@ -1,0 +1,49 @@
+name: Actualizar Dashboard RDA
+
+on:
+  schedule:
+    # Todos los días a las 13:00 UTC (07:00 CDMX)
+    - cron: '0 13 * * *'
+  workflow_dispatch:   # Permite ejecutar manualmente desde GitHub
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout pmo-hub
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install snowflake-connector-python
+
+      - name: Generar datos RDA desde Snowflake
+        env:
+          SNOWFLAKE_ACCOUNT:   ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER:      ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD:  ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ROLE:      ${{ secrets.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+        run: python rda/generate_rda.py
+
+      - name: Publicar index.html actualizado
+        run: |
+          git config user.name  "PMO Dashboard Bot"
+          git config user.email "bot@censys-pmo-hub.local"
+          git add index.html
+          git diff --cached --quiet && echo "Sin cambios en los datos RDA." || \
+            (git commit -m "rda: datos actualizados $(date '+%Y-%m-%d %H:%M UTC')" \
+             && git push origin main)
