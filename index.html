@@ -560,11 +560,11 @@ table.rda-pt tr.rda-sel{background:rgba(151,215,0,.14)!important;}
         {label:'Venta Prev.',data:top.map(p=>p.venta_prevista),backgroundColor:GD,borderRadius:3},
         {label:'Fac. c/NC',data:top.map(p=>p.facturado_nc),backgroundColor:G,borderRadius:3}
       ]},options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'top',labels:{font:{size:10},color:'#ccc'}},
-               title:{display:false}},
-      scales:{x:{ticks:{font:{size:8},color:'#888',maxRotation:45}},
-              y:{ticks:{font:{size:9},color:'#888',callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v}},grid:{color:'rgba(255,255,255,.05)'}}
-      }});
+      plugins:{legend:{position:'top',labels:{font:{size:10},color:'#ccc'}},title:{display:false}},
+      scales:{
+        x:{ticks:{font:{size:8},color:'#888',maxRotation:45},grid:{color:'rgba(255,255,255,.05)'}},
+        y:{ticks:{font:{size:9},color:'#888',callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v},grid:{color:'rgba(255,255,255,.05)'}}
+      }}});
   }
 
   function rdaRenderChC(d){
@@ -579,9 +579,10 @@ table.rda-pt tr.rda-sel{background:rgba(151,215,0,.14)!important;}
         {label:'Real Fac.',data:CONC.map(c=>dU.reduce((s,p)=>s+(p['cr_'+c.k]||0),0)),backgroundColor:G,borderRadius:3}
       ]},options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'top',labels:{font:{size:10},color:'#ccc'}}},
-      scales:{x:{ticks:{font:{size:10},color:'#888'}},
-              y:{ticks:{font:{size:9},color:'#888',callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v}},grid:{color:'rgba(255,255,255,.05)'}}
-      }});
+      scales:{
+        x:{ticks:{font:{size:10},color:'#888'},grid:{color:'rgba(255,255,255,.05)'}},
+        y:{ticks:{font:{size:9},color:'#888',callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v},grid:{color:'rgba(255,255,255,.05)'}}
+      }}});
   }
 
   window.rdaRenderTbl=function(){
