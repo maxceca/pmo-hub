@@ -325,8 +325,13 @@ table.pt tr.sel{{background:#e8f5c8!important}}
 .rt-val{{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}}
 .badge{{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700}}
 .bok{{background:#e8f5c8;color:#3d6b00}}.bw{{background:#fff3cd;color:#856404}}.bb{{background:#fde8e8;color:#8b1a1a}}
-.xbtn{{float:right;background:none;border:none;color:var(--gl);font-size:18px;cursor:pointer;line-height:1;margin-top:-2px}}
-.xbtn:hover{{color:var(--bk)}}
+.xbtn{{background:none;border:none;color:var(--gl);font-size:18px;cursor:pointer;line-height:1}}
+.xbtn:hover{{color:#fff}}
+.pdf-btn{{display:inline-flex;align-items:center;gap:5px;background:var(--g);color:var(--bk);
+  border:none;border-radius:5px;padding:5px 10px;font-size:11px;font-weight:700;
+  cursor:pointer;letter-spacing:.02em;transition:.15s}}
+.pdf-btn:hover{{opacity:.85}}
+.dupd{{font-size:10px;color:var(--gl);margin-top:6px;letter-spacing:.02em}}
 .hid{{display:none!important}}
 
 footer{{background:var(--wh);border-top:1px solid #e0e0e0;padding:8px 24px;
@@ -422,11 +427,18 @@ footer{{background:var(--wh);border-top:1px solid #e0e0e0;padding:8px 24px;
     </div>
     <div id="dcont" class="hid" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="dhead">
-        <button class="xbtn" onclick="closeDet()">&#x2715;</button>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <button class="xbtn" onclick="closeDet()">&#x2715;</button>
+          <button class="pdf-btn" onclick="downloadPDF()" title="Descargar PDF">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            Descargar PDF
+          </button>
+        </div>
         <div class="dpry" id="dpry"></div>
         <div class="dnom" id="dnom"></div>
         <div class="dcli" id="dcli"></div>
         <div class="dchips" id="dchips"></div>
+        <div class="dupd" id="dupd"></div>
       </div>
       <div class="hero" id="dhero"></div>
       <div class="dbod">
@@ -597,6 +609,8 @@ function selPry(pry){{
     `<span class="status-chip sc-gr">Ano ${{p.anio||'—'}}</span>`+
     (p.pm?`<span class="status-chip sc-gr">PM: ${{p.pm.split(' ').slice(0,2).join(' ')}}</span>`:'');
 
+  document.getElementById('dupd').textContent=`Datos actualizados al ${{RDA_DATA.updated}}`;
+
   document.getElementById('dhero').innerHTML=`
     <div class="hero-row">
       <div class="hero-num"><div class="hero-label">Venta Prevista</div>
@@ -613,8 +627,6 @@ function selPry(pry){{
   document.getElementById('dinfo').innerHTML=[
     {{l:'Tipo Venta',v:p.tipo_venta||'—'}},{{l:'Unidad Neg.',v:p.unidad_negocio||'—'}},
     {{l:'AM',v:p.am||'—'}},{{l:'Portafolio',v:p.portafolio||'—'}},
-    {{l:'Fecha Inicio',v:p.fecha_inicio||'—'}},{{l:'Fecha Fin',v:p.fecha_fin||'—'}},
-    {{l:'Ult. Factura',v:p.fecha_ult_fac||'—'}},{{l:'Monto a Fac.',v:f(p.monto_facturar)+' '+mon}},
   ].map(x=>`<div class="di"><div class="ll">${{x.l}}</div><div class="vv">${{x.v}}</div></div>`).join('');
 
   let rubroHtml='',tCP=0,tCR=0;
@@ -677,6 +689,61 @@ function closeDet(){{
   dc.classList.add('hid');
   dc.style.display='none';
   renderTbl();
+}}
+
+function downloadPDF(){{
+  const rp=document.getElementById('rp');
+  if(!rp||rp.classList.contains('hid'))return;
+  const style=`
+    <style>
+      body{{margin:0;font-family:'Avenir','Open Sans',system-ui,sans-serif;font-size:12px;color:#101820}}
+      .dhead{{background:#101820;color:#fff;padding:14px 18px;border-bottom:3px solid #97D700}}
+      .dpry{{font-size:11px;color:#97D700;font-weight:700;letter-spacing:.5px;margin-bottom:4px}}
+      .dnom{{font-size:14px;font-weight:700;line-height:1.3}}
+      .dcli{{font-size:12px;color:#919D9D;margin-top:2px}}
+      .dchips{{margin-top:8px;display:flex;flex-wrap:wrap;gap:4px}}
+      .status-chip{{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:#e8f0d8;color:#3d6b00}}
+      .sc-g{{background:#e8f0d8;color:#3d6b00}}.sc-gr{{background:#f0f0f0;color:#717C7D}}.sc-y{{background:#fff3cd;color:#856404}}
+      .dupd{{font-size:10px;color:#919D9D;margin-top:6px}}
+      .pdf-btn,.xbtn{{display:none}}
+      .hero{{padding:14px 18px;background:#f9f9f9;border-bottom:1px solid #e0e0e0}}
+      .hero-row{{display:flex;gap:16px;margin-bottom:10px}}
+      .hero-num{{flex:1}}.hero-label{{font-size:10px;color:#717C7D;font-weight:600;text-transform:uppercase;letter-spacing:.05em}}
+      .hero-val{{font-size:18px;font-weight:700;margin-top:2px}}
+      .hero-bar{{height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden;margin-bottom:4px}}
+      .hero-fill{{height:100%;background:#97D700;border-radius:4px}}.hero-fill.bad{{background:#D62828}}
+      .hero-meta{{display:flex;justify-content:space-between;font-size:11px;color:#717C7D}}
+      .dbod{{padding:14px 18px}}
+      .dsec{{margin-bottom:16px}}
+      .dttl{{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#717C7D;margin-bottom:8px;border-bottom:1px solid #e0e0e0;padding-bottom:4px}}
+      .dgrid{{display:grid;grid-template-columns:1fr 1fr;gap:6px}}
+      .di{{background:#f5f5f5;padding:6px 8px;border-radius:4px}}
+      .ll{{font-size:9px;color:#717C7D;font-weight:600;text-transform:uppercase;letter-spacing:.05em}}
+      .vv{{font-size:12px;font-weight:600;margin-top:2px}}
+      .rubro-row{{background:#f9f9f9;border-radius:6px;padding:10px 12px;margin-bottom:8px;border-left:3px solid #e0e0e0}}
+      .rubro-header{{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}}
+      .rubro-name{{font-size:12px;font-weight:700}}
+      .rubro-badge{{font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px}}
+      .bok{{background:#e8f0d8;color:#3d6b00}}.bw{{background:#fff3cd;color:#856404}}.bb{{background:#fde8e8;color:#D62828}}
+      .rubro-nums{{display:flex;gap:10px;margin-bottom:6px}}
+      .rn{{flex:1}}.rl{{font-size:9px;color:#717C7D;text-transform:uppercase;letter-spacing:.04em}}
+      .rv{{font-size:11px;font-weight:600;margin-top:2px}}
+      .rubro-bar{{height:5px;background:#e0e0e0;border-radius:3px;overflow:hidden}}
+      .rf{{height:100%;border-radius:3px}}.rf-g{{background:#97D700}}.rf-r{{background:#D62828}}
+      .rubro-total{{background:#101820;color:#fff;padding:10px 12px;border-radius:6px;margin-top:8px;border-left:4px solid #97D700}}
+      .rt-row{{display:flex;gap:10px;margin-top:6px}}.rt-cell{{flex:1}}
+      .rt-label{{font-size:9px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.04em}}
+      .rt-val{{font-size:11px;font-weight:700;color:#fff;margin-top:2px}}
+      .ok{{color:#97D700}}.bad{{color:#D62828}}
+      .pill{{font-size:9px;font-weight:700;padding:1px 5px;border-radius:8px;vertical-align:middle}}
+      .pg{{background:#c8e6c9;color:#1b5e20}}.py{{background:#fff9c4;color:#856404}}
+    </style>`;
+  const content=rp.innerHTML;
+  const w=window.open('','_blank','width=800,height=900');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reporte Ejecutivo</title>${{style}}</head><body>${{content}}</body></html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(()=>{{w.print();w.close();}},600);
 }}
 
 fillSels();
