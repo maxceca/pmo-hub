@@ -2,8 +2,8 @@ name: Actualizar Dashboard RDA
 
 on:
   schedule:
-    # Todos los días a las 13:00 UTC (07:00 CDMX)
-    - cron: '0 13 * * *'
+    # Todos los días a las 16:00 UTC (10:00 CDMX)
+    - cron: '0 16 * * *'
   workflow_dispatch:   # Permite ejecutar manualmente desde GitHub
 
 env:
