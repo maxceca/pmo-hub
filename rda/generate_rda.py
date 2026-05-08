@@ -182,7 +182,7 @@ def build_html(data: dict, logo_b64: str) -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dashboard RDA · PMO Hub · CEN Systems</title>
+<title>Reporte Ejecutivo · PMO Hub · CEN Systems</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -348,14 +348,13 @@ footer{{background:var(--wh);border-top:1px solid #e0e0e0;padding:8px 24px;
     <a href="../portafolio/">Portafolio</a>
     <a href="../ocupacion/">Ocupacion</a>
     <a href="../kpis/">KPIs</a>
-    <a href="./" class="active">RDA</a>
+    <a href="./" class="active">Reporte Ejecutivo</a>
   </div>
 </nav>
 
 <div class="dhead-band">
   <div class="dhead-left">
-    <div class="eyebrow">Datos desde Snowflake &middot; MUAMBA_EXTRACT</div>
-    <div class="title">Dashboard <span>RDA</span></div>
+    <div class="title">Reporte <span>Ejecutivo</span></div>
   </div>
   <div class="dhead-right">
     <div>Ultima actualizacion</div>
@@ -446,7 +445,7 @@ footer{{background:var(--wh);border-top:1px solid #e0e0e0;padding:8px 24px;
 
 <footer>
   <strong>CEN Systems S.A. de C.V.</strong> &nbsp;&middot;&nbsp; Cisco Gold Partner &nbsp;&middot;&nbsp;
-  Dashboard RDA &nbsp;&middot;&nbsp; <a href="../" style="color:var(--g);text-decoration:none">PMO Hub</a>
+  Reporte Ejecutivo &nbsp;&middot;&nbsp; <a href="../" style="color:var(--g);text-decoration:none">PMO Hub</a>
 </footer>
 
 <script>
