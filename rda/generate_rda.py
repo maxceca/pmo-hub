@@ -427,13 +427,9 @@ footer{{background:var(--wh);border-top:1px solid #e0e0e0;padding:8px 24px;
     </div>
     <div class="card">
       <div class="sbar">
-        <div class="sfield">
-          <label>Numero de PRY</label>
-          <input class="si" id="bPry" type="text" placeholder="ej. 00282..." oninput="renderTbl()">
-        </div>
-        <div class="sfield">
-          <label>Cliente</label>
-          <input class="si" id="bCli" type="text" placeholder="ej. COLMEX..." oninput="renderTbl()">
+        <div class="sfield" style="flex:2;min-width:220px">
+          <label>Buscar</label>
+          <input class="si" id="bQ" type="text" placeholder="Proyecto, nombre o cliente..." oninput="renderTbl()" autocomplete="off">
         </div>
         <span class="cnt" id="cnt"></span>
       </div>
@@ -603,11 +599,11 @@ function renderChC(d){{
 }}
 
 function renderTbl(){{
-  const qP=document.getElementById('bPry').value.toLowerCase();
-  const qC=document.getElementById('bCli').value.toLowerCase();
-  const d=filtered().filter(p=>
-    (!qP||p.proyecto.toLowerCase().includes(qP))&&
-    (!qC||p.cliente.toLowerCase().includes(qC)));
+  const q=(document.getElementById('bQ').value||'').toLowerCase().trim();
+  const d=filtered().filter(p=>!q||
+    (p.proyecto||'').toLowerCase().includes(q)||
+    (p.nombre||'').toLowerCase().includes(q)||
+    (p.cliente||'').toLowerCase().includes(q));
   document.getElementById('cnt').textContent=d.length+' proyectos';
   const rows=d.map(p=>{{
     const ec=p.estatus&&p.estatus.toLowerCase().includes('activ')?'pg':
