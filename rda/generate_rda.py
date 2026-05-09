@@ -192,7 +192,7 @@ def build_html(data: dict, logo_b64: str) -> str:
   --font:'Avenir','Open Sans',system-ui,sans-serif;
 }}
 *{{box-sizing:border-box;margin:0;padding:0}}
-body{{font-family:var(--font);background:var(--bg);color:var(--bk);font-size:14px}}
+body{{font-family:var(--font);background:var(--bg);color:var(--bk);font-size:14px;line-height:1.5}}
 
 /* NAV */
 nav.hub-nav{{display:flex;align-items:center;justify-content:space-between;
@@ -229,10 +229,25 @@ select:focus{{border-color:var(--g)}}
 .sep{{width:1px;height:22px;background:#e0e0e0}}
 
 /* LAYOUT */
-.layout{{display:grid;grid-template-columns:1fr 680px;height:calc(100vh - 106px);overflow:hidden}}
+.layout{{display:grid;grid-template-columns:1fr 640px;height:calc(100vh - 106px);overflow:hidden}}
 .left{{overflow-y:auto;padding:16px 20px}}
 .right{{border-left:3px solid var(--g);background:var(--wh);display:flex;flex-direction:column;
   box-shadow:-6px 0 28px rgba(0,0,0,.12);overflow:hidden}}
+@media(max-width:1200px){{
+  .layout{{grid-template-columns:1fr 520px}}
+}}
+@media(max-width:960px){{
+  .layout{{grid-template-columns:1fr 420px}}
+  .crow{{grid-template-columns:1fr}}
+  .hero-val{{font-size:18px}}
+}}
+@media(max-width:768px){{
+  .layout{{display:flex;flex-direction:column;height:auto;overflow:visible}}
+  .left{{overflow-y:visible}}
+  .right{{border-left:none;border-top:3px solid var(--g);box-shadow:0 -4px 20px rgba(0,0,0,.1);
+    height:90vh;overflow:hidden}}
+  .nav-links a{{padding:5px 7px;font-size:11px}}
+}}
 
 /* KPIs */
 .krow{{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}}
@@ -251,7 +266,7 @@ select:focus{{border-color:var(--g)}}
 .crow{{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}}
 .card{{background:var(--wh);border-radius:6px;padding:14px 18px;box-shadow:0 1px 3px rgba(0,0,0,.06)}}
 .ct{{font-size:10px;font-weight:700;padding-bottom:5px;border-bottom:2px solid var(--g);display:inline-block;margin-bottom:10px}}
-.cw{{position:relative;height:190px}}
+.cw{{position:relative;height:220px}}
 
 /* Table */
 .sbar{{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}}
@@ -273,11 +288,22 @@ table.pt tr.sel{{background:#e8f5c8!important}}
 .pg{{background:#e8f5c8;color:#3d6b00}}.py{{background:#fff3cd;color:#856404}}
 .pr{{background:#fde8e8;color:#8b1a1a}}.pgr{{background:#ebebeb;color:#555}}
 
+/* Toolbar filter badge */
+.filter-badge{{display:inline-flex;align-items:center;justify-content:center;
+  background:var(--g);color:var(--bk);border-radius:10px;font-size:10px;font-weight:800;
+  padding:1px 7px;margin-left:4px;letter-spacing:.02em}}
+.filter-badge.hidden{{display:none}}
+
 /* Right panel */
 .dempty{{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  color:var(--gl);padding:28px;text-align:center;gap:10px}}
-.dempty .ico{{font-size:50px;opacity:.3}}
-.dempty p{{font-size:12px;line-height:1.6;max-width:240px}}
+  color:var(--gd);padding:32px;text-align:center;gap:14px;
+  background:linear-gradient(160deg,#fafafa 0%,#f0f4e8 100%)}}
+.dempty .ico{{font-size:52px;opacity:.55;line-height:1}}
+.dempty .emp-title{{font-size:13px;font-weight:700;color:var(--bk)}}
+.dempty p{{font-size:12px;line-height:1.65;max-width:230px;color:var(--gd)}}
+.dempty .emp-hint{{font-size:11px;color:var(--g);font-weight:600;
+  background:rgba(151,215,0,.12);padding:6px 14px;border-radius:20px;
+  border:1px solid rgba(151,215,0,.3)}}
 .dhead{{background:var(--bk);color:#fff;padding:14px 18px;border-bottom:3px solid var(--g);flex-shrink:0}}
 .dpry{{font-size:11px;color:var(--g);font-weight:700;letter-spacing:.5px;margin-bottom:4px}}
 .dnom{{font-size:14px;font-weight:700;line-height:1.3}}
@@ -318,11 +344,13 @@ table.pt tr.sel{{background:#e8f5c8!important}}
 .rubro-bar{{height:4px;background:#e0e0e0;border-radius:2px;overflow:hidden}}
 .rf{{height:100%;border-radius:2px;transition:width .5s}}
 .rf-g{{background:var(--g)}}.rf-r{{background:var(--red)}}
-.rubro-total{{margin-top:12px;background:#f0f0f0;border-radius:7px;padding:12px 14px}}
-.rt-row{{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:8px}}
-.rt-cell{{text-align:center}}
-.rt-label{{font-size:9px;color:var(--gd);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}}
-.rt-val{{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}}
+.rubro-total{{margin-top:12px;border-radius:7px;padding:12px 14px;
+  border:2px solid transparent;background:#fafafa}}
+.rt-row{{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px}}
+.rt-cell{{text-align:center;padding:8px 4px;background:var(--wh);border-radius:5px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06)}}
+.rt-label{{font-size:9px;color:var(--gd);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}}
+.rt-val{{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}}
 .badge{{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700}}
 .bok{{background:#e8f5c8;color:#3d6b00}}.bw{{background:#fff3cd;color:#856404}}.bb{{background:#fde8e8;color:#8b1a1a}}
 .xbtn{{background:none;border:none;color:var(--gl);font-size:18px;cursor:pointer;line-height:1}}
@@ -368,19 +396,20 @@ footer{{background:var(--wh);border-top:1px solid #e0e0e0;padding:8px 24px;
 </div>
 
 <div class="toolbar">
-  <span class="lbl">Ano</span>
+  <label class="lbl" for="sAnio">A&ntilde;o</label>
   <select id="sAnio" onchange="applyF()"><option value="">Todos</option></select>
-  <span class="lbl">Estatus</span>
+  <label class="lbl" for="sEst">Estatus</label>
   <select id="sEst" onchange="applyF()"><option value="">Todos</option></select>
-  <span class="lbl">Tipo Venta</span>
+  <label class="lbl" for="sTipo">Tipo Venta</label>
   <select id="sTipo" onchange="applyF()"><option value="">Todos</option></select>
   <div class="sep"></div>
-  <span class="lbl">Moneda</span>
+  <label class="lbl" for="sMon">Moneda</label>
   <select id="sMon" onchange="applyF()">
     <option value="">Todas</option>
     <option value="USD">USD</option>
     <option value="MXN">MXN</option>
   </select>
+  <span class="filter-badge hidden" id="fBadge"></span>
 </div>
 
 <div class="layout">
@@ -412,7 +441,7 @@ footer{{background:var(--wh);border-top:1px solid #e0e0e0;padding:8px 24px;
         <table class="pt">
           <thead><tr>
             <th>Proyecto</th><th>Nombre</th><th>Cliente</th>
-            <th>Tipo Venta</th><th>Estatus</th><th>Mon.</th><th>PM</th><th>Ano</th>
+            <th>Tipo Venta</th><th>Estatus</th><th>Mon.</th><th>PM</th><th>A&ntilde;o</th>
           </tr></thead>
           <tbody id="tbody"></tbody>
         </table>
@@ -422,17 +451,19 @@ footer{{background:var(--wh);border-top:1px solid #e0e0e0;padding:8px 24px;
 
   <div class="right" id="rp">
     <div class="dempty" id="demp">
-      <div class="ico">📋</div>
-      <p>Selecciona un proyecto de la tabla para ver el detalle financiero y las desviaciones por rubro</p>
+      <div class="ico">📊</div>
+      <div class="emp-title">Detalle del proyecto</div>
+      <p>Selecciona un proyecto de la tabla para ver el an&aacute;lisis financiero y las desviaciones por rubro.</p>
+      <span class="emp-hint">&#x2190; Haz clic en cualquier fila</span>
     </div>
     <div id="dcont" class="hid" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="dhead">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <button class="xbtn" onclick="closeDet()">&#x2715;</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <button class="pdf-btn" onclick="downloadPDF()" title="Descargar PDF">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
             Descargar PDF
           </button>
+          <button class="xbtn" onclick="closeDet()" aria-label="Cerrar detalle">&#x2715;</button>
         </div>
         <div class="dpry" id="dpry"></div>
         <div class="dnom" id="dnom"></div>
@@ -488,7 +519,15 @@ function filtered(){{
   return all.filter(p=>(!a||p.anio===a)&&(!e||p.estatus===e)&&(!t||p.tipo_venta===t)&&(!m||p.rda_moneda===m));
 }}
 
-function applyF(){{renderAll();}}
+function updateFilterBadge(){{
+  const vals=[document.getElementById('sAnio'),document.getElementById('sEst'),
+              document.getElementById('sTipo'),document.getElementById('sMon')];
+  const active=vals.filter(s=>s.value!=='').length;
+  const b=document.getElementById('fBadge');
+  if(active>0){{b.textContent=active+' filtro'+(active>1?'s':'')+' activo'+(active>1?'s':'');b.classList.remove('hidden');}}
+  else b.classList.add('hidden');
+}}
+function applyF(){{updateFilterBadge();renderAll();}}
 function renderAll(){{const d=filtered();renderKPIs(d);renderChV(d);renderChC(d);renderTbl();}}
 
 function kpiCard(label,cls,usd,mxn,sub){{
@@ -521,37 +560,46 @@ function renderKPIs(d){{
     kpiCard('Variacion Costo',vcU>0||vcM>0?'r':'',vcU,vcM,'Prev. vs Real');
 }}
 
+function _chartMon(d){{
+  // Usa la moneda del filtro activo; si ambas, prioriza USD
+  const m=document.getElementById('sMon').value;
+  return m||'USD';
+}}
+function _fmtY(v){{return v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v;}}
+const _chartOpts={{responsive:true,maintainAspectRatio:false,
+  plugins:{{legend:{{position:'top',labels:{{font:{{size:10}},boxWidth:12,padding:8}}}}}},
+  scales:{{
+    x:{{ticks:{{font:{{size:8}},maxRotation:45,minRotation:0}},grid:{{color:'rgba(0,0,0,.03)'}}}},
+    y:{{ticks:{{font:{{size:9}},callback:_fmtY}},grid:{{color:'rgba(0,0,0,.04)'}}}}
+  }}}};
+
 function renderChV(d){{
-  const top=[...d].filter(p=>p.rda_moneda==='USD'&&(p.venta_prevista>0||p.facturado_nc>0))
+  const mon=_chartMon(d);
+  const top=[...d].filter(p=>p.rda_moneda===mon&&(p.venta_prevista>0||p.facturado_nc>0))
     .sort((a,b)=>b.venta_prevista-a.venta_prevista).slice(0,12);
+  document.querySelector('#cvVenta').closest('.card').querySelector('.ct').textContent=
+    `Venta Prevista vs Facturado \xb7 Top 12 ${{mon}}`;
   if(chV)chV.destroy();
   chV=new Chart(document.getElementById('cvVenta'),{{type:'bar',data:{{
     labels:top.map(p=>p.proyecto),
     datasets:[
-      {{label:'Venta Prev.',data:top.map(p=>p.venta_prevista),backgroundColor:GD,borderRadius:3}},
-      {{label:'Fac. c/NC',data:top.map(p=>p.facturado_nc),backgroundColor:G,borderRadius:3}}
-    ]}},options:{{responsive:true,maintainAspectRatio:false,
-    plugins:{{legend:{{position:'top',labels:{{font:{{size:10}}}}}},title:{{display:false}}}},
-    scales:{{
-      x:{{ticks:{{font:{{size:8}},maxRotation:45}},grid:{{color:'rgba(0,0,0,.04)'}}}},
-      y:{{ticks:{{font:{{size:9}},callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v}},grid:{{color:'rgba(0,0,0,.04)'}}}}
-    }}}}}});
+      {{label:'Venta Prev.',data:top.map(p=>p.venta_prevista),backgroundColor:GD,borderRadius:4}},
+      {{label:'Fac. c/NC',data:top.map(p=>p.facturado_nc),backgroundColor:G,borderRadius:4}}
+    ]}},options:_chartOpts}});
 }}
 
 function renderChC(d){{
-  const dU=d.filter(p=>p.rda_moneda==='USD');
+  const mon=_chartMon(d);
+  const dF=d.filter(p=>p.rda_moneda===mon);
+  document.querySelector('#cvCostos').closest('.card').querySelector('.ct').textContent=
+    `Costo Previsto vs Real \xb7 por concepto ${{mon}}`;
   if(chC)chC.destroy();
   chC=new Chart(document.getElementById('cvCostos'),{{type:'bar',data:{{
     labels:CONC.map(c=>c.l),
     datasets:[
-      {{label:'Costo Prev.',data:CONC.map(c=>dU.reduce((s,p)=>s+(p['cp_'+c.k]||0),0)),backgroundColor:GD,borderRadius:3}},
-      {{label:'Real Fac.',data:CONC.map(c=>dU.reduce((s,p)=>s+(p['cr_'+c.k]||0),0)),backgroundColor:G,borderRadius:3}}
-    ]}},options:{{responsive:true,maintainAspectRatio:false,
-    plugins:{{legend:{{position:'top',labels:{{font:{{size:10}}}}}}}},
-    scales:{{
-      x:{{ticks:{{font:{{size:10}}}},grid:{{color:'rgba(0,0,0,.04)'}}}},
-      y:{{ticks:{{font:{{size:9}},callback:v=>v>=1e6?(v/1e6).toFixed(1)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v}},grid:{{color:'rgba(0,0,0,.04)'}}}}
-    }}}}}});
+      {{label:'Costo Prev.',data:CONC.map(c=>dF.reduce((s,p)=>s+(p['cp_'+c.k]||0),0)),backgroundColor:GD,borderRadius:4}},
+      {{label:'Real Fac.',data:CONC.map(c=>dF.reduce((s,p)=>s+(p['cr_'+c.k]||0),0)),backgroundColor:G,borderRadius:4}}
+    ]}},options:_chartOpts}});
 }}
 
 function renderTbl(){{
@@ -606,7 +654,7 @@ function selPry(pry){{
   const estCls=est.toLowerCase().includes('activ')?'sc-g':est.toLowerCase().includes('cerr')?'sc-gr':'sc-y';
   document.getElementById('dchips').innerHTML=
     `<span class="status-chip ${{estCls}}">${{est}}</span>`+
-    `<span class="status-chip sc-gr">Ano ${{p.anio||'—'}}</span>`+
+    `<span class="status-chip sc-gr">A\xf1o ${{p.anio||'—'}}</span>`+
     (p.pm?`<span class="status-chip sc-gr">PM: ${{p.pm.split(' ').slice(0,2).join(' ')}}</span>`:'');
 
   document.getElementById('dupd').textContent=`Datos actualizados al ${{RDA_DATA.updated}}`;
@@ -647,9 +695,8 @@ function selPry(pry){{
           <div class="rn"><div class="rl">Previsto</div><div class="rv">${{f(cp)}}</div></div>
           <div class="rn"><div class="rl">Real Fac.</div>
             <div class="rv" style="color:${{va>0?RED:'inherit'}}">${{f(cr)}}</div></div>
-          <div class="rn"><div class="rl">Variacion</div>
-            <div class="rv" style="color:${{va>0?RED:'#3d6b00'}}">${{va>0?'+':''}}</div>
-            <div class="rv" style="color:${{va>0?RED:'#3d6b00'}}">${{f(va)}}</div></div>
+          <div class="rn"><div class="rl">Variaci\xf3n</div>
+            <div class="rv" style="color:${{va>0?RED:'#3d6b00'}}">${{va>0?'+':''}}${{f(va)}}</div></div>
         </div>
         <div class="rubro-bar"><div class="rf ${{barCls}}" style="width:${{barW.toFixed(1)}}%"></div></div>
       </div>`;
@@ -669,9 +716,8 @@ function selPry(pry){{
           <div class="rt-val">${{f(tCP)}}</div></div>
         <div class="rt-cell"><div class="rt-label">Real Facturado</div>
           <div class="rt-val" style="color:${{tv>0?RED:'inherit'}}">${{f(tCR)}}</div></div>
-        <div class="rt-cell"><div class="rt-label">Variacion</div>
-          <div class="rt-val" style="color:${{tv>0?RED:'#3d6b00'}}">${{tv>0?'+':''}}</div>
-          <div class="rt-val" style="color:${{tv>0?RED:'#3d6b00'}}">${{f(tv)}}</div></div>
+        <div class="rt-cell"><div class="rt-label">Variaci\xf3n</div>
+          <div class="rt-val" style="color:${{tv>0?RED:'#3d6b00'}}">${{tv>0?'+':''}}${{f(tv)}}</div></div>
       </div>
     </div>`;
 
@@ -680,6 +726,10 @@ function selPry(pry){{
   const dc=document.getElementById('dcont');
   dc.classList.remove('hid');
   dc.style.display='flex';
+  // Scroll al panel en mobile
+  if(window.innerWidth<768){{
+    document.getElementById('rp').scrollIntoView({{behavior:'smooth',block:'start'}});
+  }}
 }}
 
 function closeDet(){{
