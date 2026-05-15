@@ -10,7 +10,7 @@ Uso:
 Variables de entorno requeridas:
   SNOWFLAKE_ACCOUNT   ej. a4736573681671-censystemsdb
   SNOWFLAKE_USER      ej. rda_dashboard
-  SNOWFLAKE_PASSWORD  ej. RdaDashboard2024
+  SNOWFLAKE_PASSWORD  ej. MaXcECa1120039
   SNOWFLAKE_ROLE      ej. PM             (default: PM)
   SNOWFLAKE_WAREHOUSE ej. COMPUTE_WH     (default: COMPUTE_WH)
 """
@@ -31,7 +31,7 @@ LOGO_FILE  = ROOT / "assets" / "logo.png"
 # ── Snowflake config ─────────────────────────────────────────────────
 SF_ACCOUNT   = os.environ.get("SNOWFLAKE_ACCOUNT",   "a4736573681671-censystemsdb").strip()
 SF_USER      = os.environ.get("SNOWFLAKE_USER",       "rda_dashboard").strip()
-SF_PASSWORD  = os.environ.get("SNOWFLAKE_PASSWORD",   "RdaDashboard2024").strip()
+SF_PASSWORD  = os.environ.get("SNOWFLAKE_PASSWORD",   "MaXcECa1120039").strip()
 SF_ROLE      = os.environ.get("SNOWFLAKE_ROLE",       "PM").strip()
 SF_WAREHOUSE = os.environ.get("SNOWFLAKE_WAREHOUSE",  "COMPUTE_WH").strip()
 SF_DATABASE  = "MUAMBA_EXTRACT"
@@ -81,7 +81,7 @@ SELECT PROYECTO, NOMBRE, ESTATUS, SUCURSAL, NOMBRE_CLIENTE,
        VENTA_PREVISTA_TOTAL, FACTURADO_CON_NC,
        COSTO_PREVISTO_EQUIPO, COSTO_PREVISTO_SERVICIOS, COSTO_PREVISTO_MOI,
        COSTO_PREVISTO_MOD, COSTO_PREVISTO_GASTOS, COSTO_PREVISTO_OTROS, COSTO_PREVISTO_TOTAL,
-       COSTO_REAL_EQUIPO_FACTURADO, COSTO_REAL_SERVICIOS, COSTO_REAL_MOI,
+       COSTO_REAL_EQUIPO_ENTREGADO, COSTO_REAL_SERVICIOS, COSTO_REAL_MOI,
        COSTO_REAL_MOD, COSTO_REAL_GASTOS, COSTOS_REAL_OTROS, COSTO_REAL_TOTAL,
        MARGEN_PREVISTO
 FROM {db}.{schema}.{table}
@@ -120,7 +120,7 @@ def _row_to_dict(row, cols):
         "cp_gastos":      _f(r.get("COSTO_PREVISTO_GASTOS")),
         "cp_otros":       _f(r.get("COSTO_PREVISTO_OTROS")),
         "cp_total":       _f(r.get("COSTO_PREVISTO_TOTAL")),
-        "cr_equipo":      _f(r.get("COSTO_REAL_EQUIPO_FACTURADO")),
+        "cr_equipo":      _f(r.get("COSTO_REAL_EQUIPO_ENTREGADO")),
         "cr_servicios":   _f(r.get("COSTO_REAL_SERVICIOS")),
         "cr_moi":         _f(r.get("COSTO_REAL_MOI")),
         "cr_mod":         _f(r.get("COSTO_REAL_MOD")),
