@@ -30,8 +30,8 @@ LOGO_FILE  = ROOT / "assets" / "logo.png"
 
 # ── Snowflake config ─────────────────────────────────────────────────
 SF_ACCOUNT   = os.environ.get("SNOWFLAKE_ACCOUNT",   "a4736573681671-censystemsdb").strip()
-SF_USER      = os.environ.get("SNOWFLAKE_USER",       "").strip()
-SF_PASSWORD  = os.environ.get("SNOWFLAKE_PASSWORD",   "").strip()
+SF_USER      = os.environ.get("SNOWFLAKE_USER",       "rda_dashboard").strip()
+SF_PASSWORD  = os.environ.get("SNOWFLAKE_PASSWORD",   "RdaDashboard2024").strip()
 SF_ROLE      = os.environ.get("SNOWFLAKE_ROLE",       "PM").strip()
 SF_WAREHOUSE = os.environ.get("SNOWFLAKE_WAREHOUSE",  "COMPUTE_WH").strip()
 SF_DATABASE  = "MUAMBA_EXTRACT"
@@ -806,10 +806,6 @@ if __name__ == "__main__":
     print(f"  Usuario:   {SF_USER}")
     print(f"  Salida:    {OUTPUT}")
     print("=" * 52)
-
-    if not SF_USER or not SF_PASSWORD:
-        print("ERROR: Se requieren SNOWFLAKE_USER y SNOWFLAKE_PASSWORD", file=sys.stderr)
-        sys.exit(1)
 
     print("Consultando Snowflake...")
     data = build_rda_data()
